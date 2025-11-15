@@ -15,22 +15,22 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: #f0f4f8;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 102, 204, 0.12);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.12);
             overflow: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
             color: white;
-            padding: 40px 30px;
+            padding: 24px 24px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -48,8 +48,8 @@
         }
 
         .header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
+            font-size: 24px;
+            margin-bottom: 4px;
             font-weight: 700;
             position: relative;
             z-index: 1;
@@ -57,7 +57,7 @@
 
         .header p {
             opacity: 0.95;
-            font-size: 15px;
+            font-size: 13px;
             position: relative;
             z-index: 1;
             letter-spacing: 0.3px;
@@ -67,18 +67,18 @@
             display: flex;
             background: #f8fafc;
             border-bottom: 1px solid #e2e8f0;
-            padding: 0 30px;
-            gap: 40px;
+            padding: 0 24px;
+            gap: 32px;
         }
 
         .tab {
             flex: 0;
-            padding: 18px 0;
+            padding: 14px 0;
             text-align: center;
             cursor: pointer;
             background: transparent;
             border: none;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: #64748b;
             transition: all 0.3s;
@@ -97,7 +97,7 @@
         }
 
         .content {
-            padding: 40px 30px;
+            padding: 24px;
         }
 
         .section {
@@ -110,28 +110,36 @@
 
         .section h2 {
             color: #1e293b;
-            font-size: 24px;
-            margin-bottom: 25px;
+            font-size: 18px;
+            margin-bottom: 16px;
             font-weight: 700;
+        }
+
+        .section h3 {
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 14px;
         }
 
         .btn {
             background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 12px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.25);
         }
 
         .btn:active {
@@ -144,185 +152,195 @@
 
         .btn-secondary:hover {
             background: #475569;
-            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.3);
+            box-shadow: 0 6px 16px rgba(100, 116, 139, 0.25);
         }
 
         .btn-danger {
             background: #dc2626;
-            padding: 8px 16px;
-            font-size: 14px;
+            padding: 6px 12px;
+            font-size: 13px;
             width: auto;
             margin-top: 0;
         }
 
         .btn-danger:hover {
             background: #b91c1c;
-            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
         }
 
         .btn-small {
-            padding: 8px 16px;
-            font-size: 14px;
+            padding: 8px 14px;
+            font-size: 13px;
             width: auto;
-            margin-left: 10px;
             background: #0066cc;
         }
 
         .summary {
             background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
             color: white;
-            padding: 35px;
-            border-radius: 12px;
-            margin: 35px 0;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.15);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
         }
 
         .summary h2 {
             color: white;
-            font-size: 18px;
-            margin-bottom: 25px;
+            font-size: 14px;
+            margin-bottom: 14px;
+            font-weight: 600;
         }
 
         .summary-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 14px;
         }
 
         .summary-item {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             backdrop-filter: blur(10px);
+            text-align: center;
         }
 
         .summary-label {
-            font-size: 13px;
-            opacity: 0.9;
-            margin-bottom: 10px;
+            font-size: 11px;
+            opacity: 0.85;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
+            font-weight: 500;
         }
 
         .summary-value {
-            font-size: 42px;
+            font-size: 28px;
             font-weight: 700;
-            margin: 0;
         }
 
         .meal-item {
             background: #f1f5f9;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid #0066cc;
+            border-left: 3px solid #0066cc;
             transition: all 0.2s;
+            gap: 12px;
         }
 
         .meal-item:hover {
             background: #e8eef7;
-            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
         }
 
         .meal-item-info {
             flex: 1;
+            min-width: 0;
         }
 
         .meal-item-name {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             color: #1e293b;
+            word-break: break-word;
         }
 
         .meal-item-details {
             color: #64748b;
-            font-size: 14px;
-            margin-top: 6px;
+            font-size: 12px;
+            margin-top: 3px;
         }
 
         .product-list {
-            margin-top: 25px;
+            margin-top: 16px;
         }
 
         .product-item {
             background: #f1f5f9;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 12px;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-left: 4px solid #10b981;
+            border-left: 3px solid #10b981;
             transition: all 0.2s;
+            gap: 12px;
         }
 
         .product-item:hover {
             background: #ecf7f3;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
         }
 
         .product-info {
             flex: 1;
+            min-width: 0;
         }
 
         .product-info h3 {
-            font-size: 16px;
+            font-size: 14px;
             color: #1e293b;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 600;
         }
 
         .product-info p {
-            font-size: 14px;
+            font-size: 12px;
             color: #64748b;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .product-actions {
             display: flex;
-            gap: 8px;
-            margin-left: 15px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .form-section {
             background: #f8fafc;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
             border: 1px solid #e2e8f0;
         }
 
         .form-section h3 {
             color: #1e293b;
-            font-size: 18px;
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            margin-top: 0;
             font-weight: 600;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: #1e293b;
-            font-size: 15px;
+            font-size: 13px;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px 14px;
+            padding: 10px;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 15px;
+            border-radius: 6px;
+            font-size: 14px;
             transition: border-color 0.3s, box-shadow 0.3s;
             font-family: inherit;
         }
@@ -332,74 +350,121 @@
         .form-group textarea:focus {
             outline: none;
             border-color: #0066cc;
-            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 70px;
+        }
+
+        .number-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .number-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: bold;
+            color: #0066cc;
+            flex-shrink: 0;
+        }
+
+        .number-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .number-btn:active {
+            background: #94a3b8;
+        }
+
+        .number-input-wrapper input {
+            flex: 1;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .number-input-wrapper input:focus {
+            box-shadow: none;
+            outline: none;
         }
 
         .search-box {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 16px;
         }
 
         .search-box input {
             width: 100%;
-            padding: 12px 40px 12px 14px;
+            padding: 10px 10px;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 15px;
+            border-radius: 6px;
+            font-size: 14px;
             transition: border-color 0.3s;
         }
 
         .search-box input:focus {
             outline: none;
             border-color: #0066cc;
-            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
         }
 
         .search-icon {
             position: absolute;
-            right: 14px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
-            font-size: 18px;
+            font-size: 16px;
+            pointer-events: none;
         }
 
         .empty-state {
             text-align: center;
-            padding: 50px 30px;
+            padding: 32px 20px;
             color: #64748b;
         }
 
         .empty-state h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin-bottom: 6px;
             color: #1e293b;
             font-weight: 600;
         }
 
         .empty-state p {
-            font-size: 15px;
+            font-size: 13px;
             opacity: 0.8;
         }
 
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 16px;
+            right: 16px;
             background: #10b981;
             color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             display: none;
             z-index: 1000;
             animation: slideIn 0.3s ease;
             font-weight: 500;
+            font-size: 13px;
         }
 
         @keyframes slideIn {
@@ -417,28 +482,29 @@
             display: inline-block;
             background: #dbeafe;
             color: #0066cc;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 14px;
+            font-size: 11px;
             font-weight: 500;
-            margin-left: 8px;
+            margin-left: 6px;
         }
 
         .header-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 12px;
         }
 
         .header-actions h2 {
             margin: 0;
+            flex: 1;
         }
 
         .btn-group {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         .btn-group .btn {
@@ -456,44 +522,44 @@
             }
 
             .header {
-                padding: 30px 20px;
+                padding: 20px 16px;
             }
 
             .header h1 {
-                font-size: 26px;
+                font-size: 20px;
             }
 
             .content {
-                padding: 25px 20px;
+                padding: 16px;
             }
 
             .tabs {
-                padding: 0 20px;
-                gap: 25px;
+                padding: 0 16px;
+                gap: 24px;
             }
 
             .summary-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 12px;
             }
 
             .summary-value {
-                font-size: 36px;
+                font-size: 24px;
             }
 
             .product-item {
                 flex-direction: column;
+                align-items: flex-start;
             }
 
             .product-actions {
                 margin-left: 0;
-                margin-top: 15px;
+                margin-top: 10px;
                 width: 100%;
             }
 
             .product-actions .btn-small {
                 flex: 1;
-                margin-left: 0;
             }
 
             .btn-group {
@@ -501,7 +567,7 @@
             }
 
             .form-section {
-                padding: 20px;
+                padding: 14px;
             }
         }
 
@@ -516,13 +582,13 @@
 
     <div class="container">
         <div class="header">
-            <h1>🍎 Kalkulator Węglowodanów</h1>
-            <p>Zarządzanie węglowodanami dla Aleksandra • Cukrzyca Typ 1</p>
+            <h1>Kalkulator Węglowodanów</h1>
+            <p>Zarządzanie dla Aleksandra • Cukrzyca Typ 1</p>
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('calculator')">📊 Kalkulator</button>
-            <button class="tab" onclick="switchTab('products')">📚 Baza Produktów</button>
+            <button class="tab active" onclick="switchTab('calculator')">Kalkulator</button>
+            <button class="tab" onclick="switchTab('products')">Baza Produktów</button>
         </div>
 
         <div class="content">
@@ -531,33 +597,37 @@
                 <h2>Aktualny Posiłek</h2>
 
                 <div class="form-section">
-                    <h3>Dodaj produkt do posiłku</h3>
+                    <h3>Dodaj produkt</h3>
                     <div class="form-group">
-                        <label class="form-required">Wybierz produkt</label>
+                        <label class="form-required">Produkt</label>
                         <select id="selectProduct" onchange="loadProductData()">
-                            <option value="">-- Wybierz produkt --</option>
+                            <option value="">-- Wybierz --</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-required">Ilość (w gramach lub ml)</label>
-                        <input type="number" id="productAmount" placeholder="np. 150" min="1" step="1">
+                        <label class="form-required">Ilość</label>
+                        <div class="number-input-wrapper">
+                            <button class="number-btn" onclick="decrementAmount()">−</button>
+                            <input type="number" id="productAmount" placeholder="0" min="1" step="1" onkeypress="if(event.key==='Enter') addToMeal()">
+                            <button class="number-btn" onclick="incrementAmount()">+</button>
+                        </div>
                     </div>
                     <button class="btn" onclick="addToMeal()">Dodaj do posiłku</button>
                 </div>
 
-                <h3 style="color: #1e293b; font-weight: 600; margin-bottom: 15px; font-size: 18px;">Produkty w posiłku</h3>
+                <h3>Produkty w posiłku</h3>
                 <div id="mealList"></div>
 
                 <div class="summary">
-                    <h2>Podsumowanie Posiłku</h2>
+                    <h2>Podsumowanie</h2>
                     <div class="summary-grid">
                         <div class="summary-item">
-                            <div class="summary-label">Łączne węglowodany</div>
-                            <div class="summary-value" id="totalCarbs">0.0<span style="font-size: 24px;">g</span></div>
+                            <div class="summary-label">Węglowodany</div>
+                            <div class="summary-value" id="totalCarbs">0.0g</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-label">Wymienniki węglowodanowe</div>
-                            <div class="summary-value" id="totalWW">0.0<span style="font-size: 24px;">WW</span></div>
+                            <div class="summary-label">Wymienniki</div>
+                            <div class="summary-value" id="totalWW">0.0WW</div>
                         </div>
                     </div>
                 </div>
@@ -568,21 +638,21 @@
             <!-- Sekcja Bazy Produktów -->
             <div id="products" class="section">
                 <div class="header-actions">
-                    <h2>Moje Produkty</h2>
-                    <button class="btn btn-small" onclick="showAddProductForm()" style="width: auto; margin-top: 0;">+ Dodaj produkt</button>
+                    <h2>Produkty</h2>
+                    <button class="btn btn-small" onclick="showAddProductForm()">+ Dodaj</button>
                 </div>
 
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Szukaj produktu..." oninput="filterProducts()">
+                    <input type="text" id="searchInput" placeholder="Szukaj..." oninput="filterProducts()">
                     <span class="search-icon">🔍</span>
                 </div>
 
                 <!-- Formularz dodawania produktu -->
                 <div id="addProductForm" style="display: none;">
                     <div class="form-section">
-                        <h3 id="formTitle">Dodaj nowy produkt</h3>
+                        <h3 id="formTitle">Dodaj produkt</h3>
                         <div class="form-group">
-                            <label class="form-required">Nazwa produktu</label>
+                            <label class="form-required">Nazwa</label>
                             <input type="text" id="productName" placeholder="np. Chleb pszenny">
                         </div>
                         <div class="form-group">
@@ -606,15 +676,15 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-required">Węglowodany na 100g/100ml</label>
+                            <label class="form-required">Węglowodany na 100</label>
                             <input type="number" id="productCarbs" placeholder="np. 49.5" min="0" step="0.1">
                         </div>
                         <div class="form-group">
                             <label>Notatki</label>
-                            <textarea id="productNotes" placeholder="Opcjonalne notatki o produkcie..."></textarea>
+                            <textarea id="productNotes" placeholder="Opcjonalnie..."></textarea>
                         </div>
                         <div class="btn-group">
-                            <button class="btn" onclick="saveProduct()">Zapisz produkt</button>
+                            <button class="btn" onclick="saveProduct()">Zapisz</button>
                             <button class="btn btn-secondary" onclick="cancelProductForm()">Anuluj</button>
                         </div>
                     </div>
@@ -698,12 +768,27 @@
 
             setTimeout(() => {
                 notification.style.display = 'none';
-            }, 3000);
+            }, 2500);
+        }
+
+        // Operacje na ilości
+        function incrementAmount() {
+            const input = document.getElementById('productAmount');
+            const current = parseInt(input.value) || 0;
+            input.value = current + 1;
+        }
+
+        function decrementAmount() {
+            const input = document.getElementById('productAmount');
+            const current = parseInt(input.value) || 1;
+            if (current > 1) {
+                input.value = current - 1;
+            }
         }
 
         // Formularz produktu
         function showAddProductForm() {
-            document.getElementById('formTitle').textContent = 'Dodaj nowy produkt';
+            document.getElementById('formTitle').textContent = 'Dodaj produkt';
             document.getElementById('addProductForm').style.display = 'block';
             document.getElementById('productName').value = '';
             document.getElementById('productCategory').value = 'pieczywo';
@@ -727,7 +812,7 @@
             const notes = document.getElementById('productNotes').value.trim();
 
             if (!name || !carbsPer100 || carbsPer100 < 0 || isNaN(carbsPer100)) {
-                showNotification('Wypełnij wszystkie wymagane pola!', 'error');
+                showNotification('Wypełnij wymagane pola!', 'error');
                 return;
             }
 
@@ -775,7 +860,7 @@
         }
 
         function deleteProduct(id) {
-            if (!confirm('Czy na pewno chcesz usunąć ten produkt?')) return;
+            if (!confirm('Usunąć ten produkt?')) return;
 
             products = products.filter(p => p.id !== id);
             saveProductsToStorage();
@@ -796,9 +881,9 @@
                 : filtered.map(product => `
                     <div class="product-item">
                         <div class="product-info">
-                            <h3>${product.name} <span class="category-badge">${product.category}</span></h3>
-                            <p>Węglowodany: <strong>${product.carbsPer100}g</strong> na 100${product.unit}</p>
-                            ${product.notes ? `<p style="margin-top: 8px; font-style: italic;">📝 ${product.notes}</p>` : ''}
+                            <h3>${product.name}<span class="category-badge">${product.category}</span></h3>
+                            <p>${product.carbsPer100}g na 100${product.unit}</p>
+                            ${product.notes ? `<p style="margin-top: 5px; font-style: italic;">${product.notes}</p>` : ''}
                         </div>
                         <div class="product-actions">
                             <button class="btn btn-small" onclick="editProduct(${product.id})">Edytuj</button>
@@ -817,7 +902,7 @@
         // Aktualizacja listy wyboru produktów
         function updateProductSelect() {
             const select = document.getElementById('selectProduct');
-            select.innerHTML = '<option value="">-- Wybierz produkt --</option>' +
+            select.innerHTML = '<option value="">-- Wybierz --</option>' +
                 products.map(p => `<option value="${p.id}">${p.name} (${p.carbsPer100}g/100${p.unit})</option>`).join('');
         }
 
@@ -860,27 +945,24 @@
             // Resetuj formularz
             document.getElementById('selectProduct').value = '';
             document.getElementById('productAmount').value = '';
-            document.getElementById('productAmount').focus();
+            document.getElementById('selectProduct').focus();
 
-            showNotification('Produkt dodany do posiłku!');
+            showNotification('Dodano!');
         }
 
         function removeFromMeal(id) {
             currentMeal = currentMeal.filter(item => item.id !== id);
             saveMealToStorage();
             updateMealDisplay();
-            showNotification('Produkt usunięty z posiłku!');
+            showNotification('Usunięto!');
         }
 
         function updateMealDisplay() {
             const totalCarbs = currentMeal.reduce((sum, item) => sum + item.carbs, 0);
             const totalWW = totalCarbs / 10;
 
-            const carbsText = document.getElementById('totalCarbs');
-            carbsText.innerHTML = totalCarbs.toFixed(1) + '<span style="font-size: 24px;">g</span>';
-
-            const wwText = document.getElementById('totalWW');
-            wwText.innerHTML = totalWW.toFixed(1) + '<span style="font-size: 24px;">WW</span>';
+            document.getElementById('totalCarbs').textContent = totalCarbs.toFixed(1) + 'g';
+            document.getElementById('totalWW').textContent = totalWW.toFixed(1) + 'WW';
 
             const listHtml = currentMeal.length === 0
                 ? '<div class="empty-state"><h3>Brak produktów</h3><p>Dodaj produkty do posiłku</p></div>'
@@ -889,7 +971,7 @@
                         <div class="meal-item-info">
                             <div class="meal-item-name">${item.productName}</div>
                             <div class="meal-item-details">
-                                📦 ${item.amount}${item.unit} • 🔢 ${item.carbs.toFixed(1)}g węglowodanów
+                                ${item.amount}${item.unit} • ${item.carbs.toFixed(1)}g w/w
                             </div>
                         </div>
                         <button class="btn btn-danger" onclick="removeFromMeal(${item.id})">Usuń</button>
@@ -901,7 +983,7 @@
 
         function clearMeal() {
             if (currentMeal.length === 0) return;
-            if (!confirm('Czy na pewno chcesz wyczyścić cały posiłek?')) return;
+            if (!confirm('Wyczyścić posiłek?')) return;
 
             currentMeal = [];
             saveMealToStorage();

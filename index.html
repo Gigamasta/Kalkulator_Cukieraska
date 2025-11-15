@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Węglowodanów - Aleksander</title>
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  /* RGB versions for opacity control */
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  /* Background color tokens (Light Mode) */
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+  --color-bg-6: rgba(249, 115, 22, 0.08);
+  --color-bg-7: rgba(236, 72, 153, 0.08);
+  --color-bg-8: rgba(6, 182, 212, 0.08);
+
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  /* Common style patterns */
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+  --status-bg-opacity: 0.15;
+  --status-border-opacity: 0.25;
+  --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+  /* RGB versions for opacity control */
+  --color-success-rgb: 33, 128, 141;
+  --color-error-rgb: 192, 21, 47;
+  --color-warning-rgb: 168, 75, 47;
+  --color-info-rgb: 98, 108, 113;
+
+  /* Typography */
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.01em;
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+
+  /* Animation */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    --color-bg-1: rgba(29, 78, 216, 0.15);
+    --color-bg-2: rgba(180, 83, 9, 0.15);
+    --color-bg-3: rgba(21, 128, 61, 0.15);
+    --color-bg-4: rgba(185, 28, 28, 0.15);
+    --color-bg-5: rgba(107, 33, 168, 0.15);
+    --color-bg-6: rgba(194, 65, 12, 0.15);
+    --color-bg-7: rgba(190, 24, 93, 0.15);
+    --color-bg-8: rgba(8, 145, 178, 0.15);
+
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-800);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-error: var(--color-red-400);
+    --color-success: var(--color-teal-300);
+    --color-warning: var(--color-orange-400);
+    --color-info: var(--color-gray-300);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+
+    --color-success-rgb: var(--color-teal-300-rgb);
+    --color-error-rgb: var(--color-red-400-rgb);
+    --color-warning-rgb: var(--color-orange-400-rgb);
+    --color-info-rgb: var(--color-gray-300-rgb);
+  }
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
+    format('woff2');
+}
+
+html {
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-16);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+  border: none;
+  text-decoration: none;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn--secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.btn--secondary:hover {
+  background: var(--color-secondary-hover);
+}
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.btn--outline:hover {
+  background: var(--color-secondary);
+}
+
+.btn--sm {
+  padding: var(--space-6) var(--space-12);
+  font-size: var(--font-size-sm);
+}
+
+.btn--danger {
+  background: var(--color-error);
+  color: var(--color-white);
+}
+
+.btn--danger:hover {
+  opacity: 0.9;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: var(--space-10) var(--space-12);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.form-control:focus {
+  border-color: var(--color-primary);
+  outline: var(--focus-outline);
+}
+
+select.form-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: var(--select-caret-light);
+  background-repeat: no-repeat;
+  background-position: right var(--space-12) center;
+  background-size: 16px;
+  padding-right: var(--space-32);
+}
+
+@media (prefers-color-scheme: dark) {
+  select.form-control {
+    background-image: var(--select-caret-dark);
+  }
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--space-8);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.form-group {
+  margin-bottom: var(--space-16);
+}
+
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* App specific styles */
+.app-container {
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+.app-header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-16);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header h1 {
+  font-size: var(--font-size-2xl);
+  text-align: center;
+  color: var(--color-text);
+}
+
+.nav-tabs {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.nav-tab {
+  padding: var(--space-12) var(--space-20);
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--duration-fast);
+}
+
+.nav-tab:hover {
+  color: var(--color-text);
+}
+
+.nav-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.main-content {
+  padding: var(--space-20);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.meal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-12);
+  background: var(--color-bg-1);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-8);
+}
+
+.meal-item-info {
+  flex: 1;
+}
+
+.meal-item-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.meal-item-details {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.summary-box {
+  background: var(--color-bg-3);
+  padding: var(--space-20);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-24);
+  border: 2px solid var(--color-success);
+}
+
+.summary-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-16);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-8) 0;
+  font-size: var(--font-size-lg);
+}
+
+.summary-label {
+  color: var(--color-text-secondary);
+}
+
+.summary-value {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success);
+  font-size: var(--font-size-xl);
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-16);
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-base);
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.product-details {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.product-actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.search-box {
+  margin-bottom: var(--space-20);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-32);
+  color: var(--color-text-secondary);
+}
+
+.add-product-form {
+  background: var(--color-bg-2);
+  padding: var(--space-16);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-20);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-12);
+  margin-top: var(--space-20);
+}
+
+.alert {
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-sm);
+}
+
+.alert--error {
+  background: rgba(var(--color-error-rgb), 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(var(--color-error-rgb), 0.3);
+}
+
+.alert--success {
+  background: rgba(var(--color-success-rgb), 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(var(--color-success-rgb), 0.3);
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-20);
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--space-24);
+}
+
+.modal-header {
+  margin-bottom: var(--space-20);
+}
+
+.modal-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.category-badge {
+  display: inline-block;
+  padding: var(--space-4) var(--space-8);
+  background: var(--color-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .meal-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+  
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+  
+  .product-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Kalkulator Węglowodanów</h1>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('calculator')">Kalkulator</button>
+                <button class="nav-tab" onclick="switchTab('products')">Baza produktów</button>
+            </nav>
+        </header>
+
+        <!-- Calculator Tab -->
+        <div id="calculator-tab" class="tab-content active">
+            <div class="main-content">
+                <h2 style="margin-bottom: var(--space-20);">Bieżący posiłek</h2>
+                
+                <div id="meal-alert" style="display: none;"></div>
+                
+                <div class="card" style="padding: var(--space-16); margin-bottom: var(--space-20);">
+                    <h3 style="margin-bottom: var(--space-16);">Dodaj produkt do posiłku</h3>
+                    <div class="form-group">
+                        <label class="form-label">Wybierz produkt</label>
+                        <select id="product-select" class="form-control">
+                            <option value="">-- Wybierz produkt --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ilość (gram/ml)</label>
+                        <input type="number" id="product-amount" class="form-control" placeholder="np. 150" min="0" step="1">
+                    </div>
+                    <button class="btn btn--primary" onclick="addProductToMeal()">Dodaj do posiłku</button>
+                </div>
+
+                <div id="meal-list">
+                    <div class="empty-state">Brak produktów w posiłku. Dodaj pierwszy produkt.</div>
+                </div>
+
+                <div id="meal-summary" style="display: none;">
+                    <div class="summary-box">
+                        <div class="summary-title">Dane do kalkulatora bolusa</div>
+                        <div class="summary-row">
+                            <span class="summary-label">Łącznie węglowodanów:</span>
+                            <span class="summary-value" id="total-carbs">0.0 g</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Wymienniki węglowodanowe:</span>
+                            <span class="summary-value" id="total-ww">0.0 WW</span>
+                        </div>
+                    </div>
+                    <button class="btn btn--secondary" onclick="clearMeal()" style="width: 100%; margin-top: var(--space-16);">Wyczyść posiłek</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products-tab" class="tab-content">
+            <div class="main-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-20);">
+                    <h2>Baza produktów</h2>
+                    <button class="btn btn--primary" onclick="openAddProductModal()">+ Dodaj produkt</button>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" id="product-search" class="form-control" placeholder="Szukaj produktu..." onkeyup="filterProducts()">
+                </div>
+
+                <div id="products-list" class="product-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Dodaj nowy produkt</h2>
+            </div>
+            <div id="product-form-alert" style="display: none;"></div>
+            <form id="product-form" onsubmit="saveProduct(event)">
+                <input type="hidden" id="product-id">
+                <div class="form-group">
+                    <label class="form-label">Nazwa produktu *</label>
+                    <input type="text" id="product-name" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Kategoria</label>
+                        <select id="product-category" class="form-control">
+                            <option value="pieczywo">Pieczywo</option>
+                            <option value="owoce">Owoce</option>
+                            <option value="nabiał">Nabiał</option>
+                            <option value="kasze i makarony">Kasze i makarony</option>
+                            <option value="słodycze">Słodycze</option>
+                            <option value="warzywa">Warzywa</option>
+                            <option value="mięso i ryby">Mięso i ryby</option>
+                            <option value="inne">Inne</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jednostka</label>
+                        <select id="product-unit" class="form-control">
+                            <option value="gram">gram</option>
+                            <option value="ml">ml</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Węglowodany na 100g/100ml *</label>
+                    <input type="number" id="product-carbs" class="form-control" required min="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notatki (opcjonalne)</label>
+                    <textarea id="product-notes" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary" style="flex: 1;">Zapisz</button>
+                    <button type="button" class="btn btn--outline" onclick="closeProductModal()" style="flex: 1;">Anuluj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let products = [
+            { id: 1, name: "Chleb pszenny", category: "pieczywo", unit: "gram", carbsPer100: 49, notes: "" },
+            { id: 2, name: "Banan", category: "owoce", unit: "gram", carbsPer100: 23.5, notes: "" },
+            { id: 3, name: "Jogurt naturalny", category: "nabiał", unit: "gram", carbsPer100: 4.7, notes: "" },
+            { id: 4, name: "Makaron ugotowany", category: "kasze i makarony", unit: "gram", carbsPer100: 30, notes: "" },
+            { id: 5, name: "Ziemniaki gotowane", category: "warzywa", unit: "gram", carbsPer100: 18, notes: "" },
+            { id: 6, name: "Jabłko", category: "owoce", unit: "gram", carbsPer100: 14, notes: "" },
+            { id: 7, name: "Mleko 2%", category: "nabiał", unit: "ml", carbsPer100: 4.8, notes: "" }
+        ];
+        
+        let currentMeal = [];
+        let nextProductId = 8;
+        let editingProductId = null;
+
+        // Initialize app
+        function init() {
+            renderProductSelect();
+            renderProductsList();
+            updateMealDisplay();
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'calculator') {
+                document.querySelector('.nav-tab:nth-child(1)').classList.add('active');
+                document.getElementById('calculator-tab').classList.add('active');
+            } else if (tabName === 'products') {
+                document.querySelector('.nav-tab:nth-child(2)').classList.add('active');
+                document.getElementById('products-tab').classList.add('active');
+            }
+        }
+
+        // Product select dropdown
+        function renderProductSelect() {
+            const select = document.getElementById('product-select');
+            select.innerHTML = '<option value="">-- Wybierz produkt --</option>';
+            
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = `${product.name} (${product.carbsPer100}g/100${product.unit})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Add product to meal
+        function addProductToMeal() {
+            const productId = parseInt(document.getElementById('product-select').value);
+            const amount = parseFloat(document.getElementById('product-amount').value);
+            
+            if (!productId) {
+                showAlert('meal-alert', 'Wybierz produkt z listy.', 'error');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showAlert('meal-alert', 'Podaj poprawną ilość produktu (większą niż 0).', 'error');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const carbs = (amount * product.carbsPer100) / 100;
+            
+            currentMeal.push({
+                productId: product.id,
+                productName: product.name,
+                amount: amount,
+                carbs: carbs,
+                unit: product.unit
+            });
+            
+            document.getElementById('product-select').value = '';
+            document.getElementById('product-amount').value = '';
+            
+            showAlert('meal-alert', 'Produkt dodany do posiłku!', 'success');
+            updateMealDisplay();
+        }
+
+        // Remove product from meal
+        function removeFromMeal(index) {
+            currentMeal.splice(index, 1);
+            updateMealDisplay();
+        }
+
+        // Clear meal
+        function clearMeal() {
+            if (currentMeal.length === 0) return;
+            
+            if (confirm('Czy na pewno chcesz wyczyścić cały posiłek?')) {
+                currentMeal = [];
+                showAlert('meal-alert', 'Posiłek został wyczyszczony.', 'success');
+                updateMealDisplay();
+            }
+        }
+
+        // Update meal display
+        function updateMealDisplay() {
+            const mealList = document.getElementById('meal-list');
+            const mealSummary = document.getElementById('meal-summary');
+            
+            if (currentMeal.length === 0) {
+                mealList.innerHTML = '<div class="empty-state">Brak produktów w posiłku. Dodaj pierwszy produkt.</div>';
+                mealSummary.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            let totalCarbs = 0;
+            
+            currentMeal.forEach((item, index) => {
+                totalCarbs += item.carbs;
+                html += `
+                    <div class="meal-item">
+                        <div class="meal-item-info">
+                            <div class="meal-item-name">${item.productName}</div>
+                            <div class="meal-item-details">
+                                ${item.amount.toFixed(1)} ${item.unit} • ${item.carbs.toFixed(1)} g węglowodanów
+                            </div>
+                        </div>
+                        <button class="btn btn--sm btn--danger" onclick="removeFromMeal(${index})">Usuń</button>
+                    </div>
+                `;
+            });
+            
+            mealList.innerHTML = html;
+            
+            const totalWW = totalCarbs / 10;
+            document.getElementById('total-carbs').textContent = `${totalCarbs.toFixed(1)} g`;
+            document.getElementById('total-ww').textContent = `${totalWW.toFixed(1)} WW`;
+            mealSummary.style.display = 'block';
+        }
+
+        // Products list
+        function renderProductsList() {
+            const list = document.getElementById('products-list');
+            const searchTerm = document.getElementById('product-search').value.toLowerCase();
+            
+            const filteredProducts = products.filter(p => 
+                p.name.toLowerCase().includes(searchTerm) ||
+                p.category.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredProducts.length === 0) {
+                list.innerHTML = '<div class="empty-state">Brak produktów do wyświetlenia.</div>';
+                return;
+            }
+            
+            let html = '';
+            filteredProducts.forEach(product => {
+                html += `
+                    <div class="product-item">
+                        <div class="product-info">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-details">
+                                <span class="category-badge">${product.category}</span>
+                                • ${product.carbsPer100}g węglowodanów / 100${product.unit}
+                                ${product.notes ? `<br><em style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">${product.notes}</em>` : ''}
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn--sm btn--outline" onclick="editProduct(${product.id})">Edytuj</button>
+                            <button class="btn btn--sm btn--danger" onclick="deleteProduct(${product.id})">Usuń</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            list.innerHTML = html;
+        }
+
+        // Filter products
+        function filterProducts() {
+            renderProductsList();
+        }
+
+        // Modal functions
+        function openAddProductModal() {
+            editingProductId = null;
+            document.getElementById('modal-title').textContent = 'Dodaj nowy produkt';
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('product-form-alert').style.display = 'none';
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+        }
+
+        // Edit product
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            editingProductId = id;
+            document.getElementById('modal-title').textContent = 'Edytuj produkt';
+            document.getElementById('product-id').value = product.id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = product.category;
+            document.getElementById('product-unit').value = product.unit;
+            document.getElementById('product-carbs').value = product.carbsPer100;
+            document.getElementById('product-notes').value = product.notes;
+            document.getElementById('product-form-alert').style.display = 'none';
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        // Save product
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('product-name').value.trim();
+            const category = document.getElementById('product-category').value;
+            const unit = document.getElementById('product-unit').value;
+            const carbs = parseFloat(document.getElementById('product-carbs').value);
+            const notes = document.getElementById('product-notes').value.trim();
+            
+            if (!name) {
+                showAlert('product-form-alert', 'Nazwa produktu jest wymagana.', 'error');
+                return;
+            }
+            
+            if (isNaN(carbs) || carbs < 0) {
+                showAlert('product-form-alert', 'Węglowodany muszą być liczbą większą lub równą 0.', 'error');
+                return;
+            }
+            
+            if (editingProductId) {
+                const product = products.find(p => p.id === editingProductId);
+                if (product) {
+                    product.name = name;
+                    product.category = category;
+                    product.unit = unit;
+                    product.carbsPer100 = carbs;
+                    product.notes = notes;
+                }
+            } else {
+                products.push({
+                    id: nextProductId++,
+                    name: name,
+                    category: category,
+                    unit: unit,
+                    carbsPer100: carbs,
+                    notes: notes
+                });
+            }
+            
+            closeProductModal();
+            renderProductsList();
+            renderProductSelect();
+            
+            showAlert('meal-alert', editingProductId ? 'Produkt zaktualizowany!' : 'Produkt dodany!', 'success');
+        }
+
+        // Delete product
+        function deleteProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            if (confirm(`Czy na pewno chcesz usunąć produkt "${product.name}"?`)) {
+                products = products.filter(p => p.id !== id);
+                renderProductsList();
+                renderProductSelect();
+                
+                switchTab('products');
+                setTimeout(() => {
+                    showAlert('meal-alert', 'Produkt usunięty.', 'success');
+                }, 100);
+            }
+        }
+
+        // Show alert
+        function showAlert(elementId, message, type) {
+            const alert = document.getElementById(elementId);
+            alert.className = `alert alert--${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('product-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProductModal();
+            }
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

@@ -3,1240 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Węglowodanów - Aleksander</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f0f4f8;
-            min-height: 100vh;
-            padding: 16px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.12);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-            color: white;
-            padding: 24px 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 4px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header p {
-            opacity: 0.95;
-            font-size: 13px;
-            position: relative;
-            z-index: 1;
-            letter-spacing: 0.3px;
-        }
-
-        .tabs {
-            display: flex;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0 24px;
-            gap: 16px;
-            overflow-x: auto;
-        }
-
-        .tab {
-            flex: 0;
-            padding: 14px 0;
-            text-align: center;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            font-size: 13px;
-            font-weight: 600;
-            color: #64748b;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -1px;
-            white-space: nowrap;
-        }
-
-        .tab:hover {
-            color: #0066cc;
-        }
-
-        .tab.active {
-            color: #0066cc;
-            border-bottom-color: #0066cc;
-        }
-
-        .content {
-            padding: 24px;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .section h2 {
-            color: #1e293b;
-            font-size: 18px;
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
-
-        .section h3 {
-            color: #1e293b;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            margin-top: 14px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.25);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: #64748b;
-        }
-
-        .btn-secondary:hover {
-            background: #475569;
-            box-shadow: 0 6px 16px rgba(100, 116, 139, 0.25);
-        }
-
-        .btn-success {
-            background: #10b981;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
-        }
-
-        .btn-danger {
-            background: #dc2626;
-            padding: 6px 12px;
-            font-size: 13px;
-            width: auto;
-            margin-top: 0;
-        }
-
-        .btn-danger:hover {
-            background: #b91c1c;
-            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
-        }
-
-        .btn-small {
-            padding: 8px 14px;
-            font-size: 13px;
-            width: auto;
-            background: #0066cc;
-        }
-
-        .summary {
-            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
-        }
-
-        .summary h2 {
-            color: white;
-            font-size: 14px;
-            margin-bottom: 14px;
-            font-weight: 600;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .summary-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border-radius: 6px;
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
-
-        .summary-label {
-            font-size: 11px;
-            opacity: 0.85;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            font-weight: 500;
-        }
-
-        .summary-value {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .meal-item {
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 3px solid #0066cc;
-            transition: all 0.2s;
-            gap: 12px;
-        }
-
-        .meal-item:hover {
-            background: #e8eef7;
-            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
-        }
-
-        .meal-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .meal-item-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #1e293b;
-            word-break: break-word;
-        }
-
-        .meal-item-details {
-            color: #64748b;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-        .product-list {
-            margin-top: 16px;
-        }
-
-        .product-item {
-            background: #f1f5f9;
-            padding: 14px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-left: 3px solid #10b981;
-            transition: all 0.2s;
-            gap: 12px;
-        }
-
-        .product-item:hover {
-            background: #ecf7f3;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
-        }
-
-        .product-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .product-info h3 {
-            font-size: 14px;
-            color: #1e293b;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .product-info p {
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 2px;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-
-        .form-section {
-            background: #f8fafc;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .form-section h3 {
-            color: #1e293b;
-            font-size: 14px;
-            margin-bottom: 12px;
-            margin-top: 0;
-            font-weight: 600;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 13px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #0066cc;
-            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-
-        .number-input-wrapper {
-            display: flex;
-            align-items: center;
-            border: 2px solid #e2e8f0;
-            border-radius: 6px;
-            overflow: hidden;
-            background: white;
-        }
-
-        .number-btn {
-            background: #e2e8f0;
-            border: none;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-weight: bold;
-            color: #0066cc;
-            flex-shrink: 0;
-        }
-
-        .number-btn:hover {
-            background: #cbd5e1;
-        }
-
-        .number-btn:active {
-            background: #94a3b8;
-        }
-
-        .number-input-wrapper input {
-            flex: 1;
-            border: none;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 10px;
-            margin: 0;
-        }
-
-        .number-input-wrapper input:focus {
-            box-shadow: none;
-            outline: none;
-        }
-
-        .number-input-wrapper input::-webkit-outer-spin-button,
-        .number-input-wrapper input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .number-input-wrapper input[type=number] {
-            -moz-appearance: textfield;
-        }
-
-        #qr-reader {
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-
-        #qr-reader video {
-            width: 100%;
-            display: block;
-        }
-
-        .scanner-controls {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .scanner-controls button {
-            flex: 1;
-        }
-
-        .scanner-info {
-            background: #dbeafe;
-            border-left: 4px solid #0066cc;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: #0c4a6e;
-        }
-
-        .product-result {
-            background: #ecfdf5;
-            border-left: 4px solid #10b981;
-            padding: 14px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            font-size: 13px;
-        }
-
-        .product-result h4 {
-            color: #065f46;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .product-result p {
-            color: #047857;
-            margin-bottom: 4px;
-        }
-
-        .product-error {
-            background: #fee2e2;
-            border-left: 4px solid #dc2626;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: #7f1d1d;
-        }
-
-        .product-loading {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: #78350f;
-        }
-
-        .search-box {
-            position: relative;
-            margin-bottom: 16px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #0066cc;
-            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 16px;
-            pointer-events: none;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 32px 20px;
-            color: #64748b;
-        }
-
-        .empty-state h3 {
-            font-size: 16px;
-            margin-bottom: 6px;
-            color: #1e293b;
-            font-weight: 600;
-        }
-
-        .empty-state p {
-            font-size: 13px;
-            opacity: 0.8;
-        }
-
-        .notification {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            background: #10b981;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 6px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            display: none;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            font-weight: 500;
-            font-size: 13px;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .category-badge {
-            display: inline-block;
-            background: #dbeafe;
-            color: #0066cc;
-            padding: 3px 8px;
-            border-radius: 14px;
-            font-size: 11px;
-            font-weight: 500;
-            margin-left: 6px;
-        }
-
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-actions h2 {
-            margin: 0;
-            flex: 1;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-            margin-top: 0;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                border-radius: 0;
-            }
-
-            body {
-                padding: 0;
-            }
-
-            .header {
-                padding: 20px 16px;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .content {
-                padding: 16px;
-            }
-
-            .tabs {
-                padding: 0 16px;
-                gap: 8px;
-            }
-
-            .tab {
-                font-size: 12px;
-                padding: 12px 0;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .summary-value {
-                font-size: 24px;
-            }
-
-            .product-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .product-actions {
-                margin-left: 0;
-                margin-top: 10px;
-                width: 100%;
-            }
-
-            .product-actions .btn-small {
-                flex: 1;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-
-            .form-section {
-                padding: 14px;
-            }
-
-            .scanner-controls {
-                flex-direction: column;
-            }
-        }
-
-        .form-required::after {
-            content: ' *';
-            color: #dc2626;
-        }
-    </style>
+    <title>Alexander Diabetes Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="notification" id="notification"></div>
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>Alexander Diabetes Manager</h1>
+        </header>
 
-    <div class="container">
-        <div class="header">
-            <h1>Kalkulator Węglowodanów</h1>
-            <p>Zarządzanie dla Aleksandra • Cukrzyca Typ 1</p>
-        </div>
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="calculator">
+                <span class="tab-icon">🧮</span>
+                <span>Kalkulator</span>
+            </button>
+            <button class="tab-btn" data-tab="products">
+                <span class="tab-icon">🍎</span>
+                <span>Produkty</span>
+            </button>
+            <button class="tab-btn" data-tab="scanner">
+                <span class="tab-icon">📷</span>
+                <span>Skaner</span>
+            </button>
+            <button class="tab-btn" data-tab="guide">
+                <span class="tab-icon">📚</span>
+                <span>Poradnik</span>
+            </button>
+        </nav>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('calculator')">Kalkulator</button>
-            <button class="tab" onclick="switchTab('scanner')">Skaner</button>
-            <button class="tab" onclick="switchTab('products')">Produkty</button>
-        </div>
+        <!-- Tab Content -->
+        <main class="tab-content">
+            <!-- Calculator Tab -->
+            <div id="calculator" class="tab-pane active">
+                <div class="section">
+                    <h2>Kalkulator Bolusa</h2>
+                    
+                    <div class="card">
+                        <h3>Aktualna Glikemia <span class="required">*</span></h3>
+                        <div class="input-group">
+                            <input type="number" id="glucose-level" inputmode="numeric" placeholder="np. 120" class="form-control">
+                            <span class="unit">mg/dl</span>
+                        </div>
+                    </div>
 
-        <div class="content">
-            <!-- Sekcja Kalkulatora -->
-            <div id="calculator" class="section active">
-                <h2>Aktualny Posiłek</h2>
+                    <div class="card">
+                        <h3>Wybierz produkty lub wprowadź WW</h3>
+                        <div class="product-selection" id="selected-products"></div>
+                        <button class="btn btn--secondary" id="add-product-btn">+ Dodaj produkt</button>
+                        
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Lub wprowadź bezpośrednio WW:</label>
+                            <input type="number" id="manual-ww" inputmode="decimal" step="0.1" placeholder="0" class="form-control">
+                            <span class="unit">WW</span>
+                        </div>
+                    </div>
 
-                <div class="form-section">
-                    <h3>Dodaj produkt</h3>
-                    <div class="form-group">
-                        <label class="form-required">Produkt</label>
-                        <select id="selectProduct" onchange="loadProductData()">
-                            <option value="">-- Wybierz --</option>
+                    <div class="card">
+                        <h3>Parametry</h3>
+                        <div class="params-grid">
+                            <div>
+                                <label>Glikemia docelowa:</label>
+                                <input type="number" id="target-glucose" inputmode="numeric" value="100" class="form-control">
+                                <span class="unit-small">mg/dl</span>
+                            </div>
+                            <div>
+                                <label>ICR:</label>
+                                <input type="number" id="icr" inputmode="decimal" step="0.1" value="10" class="form-control">
+                                <span class="unit-small">g/j</span>
+                            </div>
+                            <div>
+                                <label>ISF:</label>
+                                <input type="number" id="isf" inputmode="decimal" step="1" value="50" class="form-control">
+                                <span class="unit-small">mg/dl/j</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn--primary btn--full-width" id="calculate-bolus">Oblicz Bolus</button>
+
+                    <div id="bolus-result" class="result-card" style="display:none;">
+                        <h3>Wynik</h3>
+                        <div class="result-details">
+                            <div class="result-row">
+                                <span>Bolus posiłkowy:</span>
+                                <span id="meal-bolus">0</span> j
+                            </div>
+                            <div class="result-row">
+                                <span>Bolus korygujący:</span>
+                                <span id="correction-bolus">0</span> j
+                            </div>
+                            <div class="result-row total">
+                                <span>Całkowity bolus:</span>
+                                <span id="total-bolus">0</span> j
+                            </div>
+                            <div class="result-row">
+                                <span>Węglowodany:</span>
+                                <span id="total-carbs">0</span> g
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Historia bolusów</h3>
+                        <div id="bolus-history"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="products" class="tab-pane">
+                <div class="section">
+                    <h2>Baza Produktów</h2>
+                    
+                    <div class="toolbar">
+                        <input type="text" id="search-products" placeholder="Szukaj produktu..." class="form-control">
+                        <select id="category-filter" class="form-control">
+                            <option value="">Wszystkie kategorie</option>
+                        </select>
+                        <select id="sort-products" class="form-control">
+                            <option value="date-desc">Najnowsze</option>
+                            <option value="date-asc">Najstarsze</option>
+                            <option value="name-asc">A-Z</option>
+                            <option value="name-desc">Z-A</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="form-required">Ilość</label>
-                        <div class="number-input-wrapper">
-                            <button class="number-btn" onclick="decrementAmount()">−</button>
-                            <input type="number" id="productAmount" inputmode="numeric" pattern="[0-9]*" placeholder="0" min="1" step="1" onkeypress="if(event.key==='Enter') addToMeal()">
-                            <button class="number-btn" onclick="incrementAmount()">+</button>
-                        </div>
-                    </div>
-                    <button class="btn" onclick="addToMeal()">Dodaj do posiłku</button>
+
+                    <button class="btn btn--primary" id="add-new-product">+ Dodaj nowy produkt</button>
+
+                    <div id="products-list" class="products-grid"></div>
                 </div>
-
-                <h3>Produkty w posiłku</h3>
-                <div id="mealList"></div>
-
-                <div class="summary">
-                    <h2>Podsumowanie</h2>
-                    <div class="summary-grid">
-                        <div class="summary-item">
-                            <div class="summary-label">Węglowodany</div>
-                            <div class="summary-value" id="totalCarbs">0.0g</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">Wymienniki</div>
-                            <div class="summary-value" id="totalWW">0.0WW</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-secondary" onclick="clearMeal()">Wyczyść posiłek</button>
             </div>
 
-            <!-- Sekcja Skanera -->
-            <div id="scanner" class="section">
-                <h2>Skaner kodów kreskowych</h2>
-
-                <div class="scanner-info">
-                    Skan kod kreskowy produktu aby automatycznie pobrano jego dane odżywcze z bazy Open Food Facts
-                </div>
-
-                <div class="scanner-controls">
-                    <button class="btn btn-success" onclick="startScanner()">Włącz kamerę</button>
-                    <button class="btn btn-secondary" onclick="stopScanner()">Wyłącz kamerę</button>
-                </div>
-
-                <div id="qr-reader" style="display:none;"></div>
-
-                <div id="scannerStatus"></div>
-                <div id="scannerResult"></div>
-            </div>
-
-            <!-- Sekcja Bazy Produktów -->
-            <div id="products" class="section">
-                <div class="header-actions">
-                    <h2>Produkty</h2>
-                    <button class="btn btn-small" onclick="showAddProductForm()">+ Dodaj</button>
-                </div>
-
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Szukaj..." oninput="filterProducts()">
-                    <span class="search-icon">🔍</span>
-                </div>
-
-                <!-- Formularz dodawania produktu -->
-                <div id="addProductForm" style="display: none;">
-                    <div class="form-section">
-                        <h3 id="formTitle">Dodaj produkt</h3>
-                        <div class="form-group">
-                            <label class="form-required">Nazwa</label>
-                            <input type="text" id="productName" placeholder="np. Chleb pszenny">
+            <!-- Scanner Tab -->
+            <div id="scanner" class="tab-pane">
+                <div class="section">
+                    <h2>Skaner Kodów Kreskowych</h2>
+                    
+                    <div class="scanner-container">
+                        <div id="scanner-mode-select">
+                            <button class="btn btn--primary" id="start-barcode-scan">📷 Skanuj kod kreskowy</button>
+                            <button class="btn btn--secondary" id="start-ocr-scan">🔍 Skanuj etykietę (OCR)</button>
                         </div>
-                        <div class="form-group">
-                            <label class="form-required">Kategoria</label>
-                            <select id="productCategory">
-                                <option value="pieczywo">Pieczywo</option>
-                                <option value="owoce">Owoce</option>
-                                <option value="nabiał">Nabiał</option>
-                                <option value="kasze i makarony">Kasze i makarony</option>
-                                <option value="słodycze">Słodycze</option>
-                                <option value="warzywa">Warzywa</option>
-                                <option value="mięso i ryby">Mięso i ryby</option>
-                                <option value="inne">Inne</option>
-                            </select>
+
+                        <div id="camera-container" style="display:none;">
+                            <video id="camera-preview" autoplay playsinline></video>
+                            <canvas id="scanner-canvas" style="display:none;"></canvas>
+                            <div class="scanner-overlay">
+                                <div class="scan-region"></div>
+                            </div>
+                            <button class="btn btn--secondary" id="stop-scan">Zatrzymaj skanowanie</button>
                         </div>
-                        <div class="form-group">
-                            <label class="form-required">Jednostka</label>
-                            <select id="productUnit">
-                                <option value="gram">gram</option>
-                                <option value="ml">ml</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-required">Węglowodany na 100</label>
-                            <input type="number" id="productCarbs" placeholder="np. 49.5" min="0" step="0.1">
-                        </div>
-                        <div class="form-group">
-                            <label>Kod produktu (EAN)</label>
-                            <input type="text" id="productEAN" placeholder="Opcjonalnie">
-                        </div>
-                        <div class="form-group">
-                            <label>Notatki</label>
-                            <textarea id="productNotes" placeholder="Opcjonalnie..."></textarea>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn" onclick="saveProduct()">Zapisz</button>
-                            <button class="btn btn-secondary" onclick="cancelProductForm()">Anuluj</button>
-                        </div>
+
+                        <div id="scan-result" style="display:none;"></div>
                     </div>
                 </div>
+            </div>
 
-                <div id="productList" class="product-list"></div>
+            <!-- Guide Tab -->
+            <div id="guide" class="tab-pane">
+                <div class="section">
+                    <h2>Poradnik Cukrzycy</h2>
+                    
+                    <div class="guide-menu">
+                        <button class="guide-btn" data-guide="pump-failure">⚠️ Awaria pompy</button>
+                        <button class="guide-btn" data-guide="high-pump">⬆️ Wysoka glikemia (pompa)</button>
+                        <button class="guide-btn" data-guide="low-pump">⬇️ Niska glikemia (pompa)</button>
+                        <button class="guide-btn" data-guide="high-pens">⬆️ Wysoka glikemia (peny)</button>
+                        <button class="guide-btn" data-guide="low-pens">⬇️ Niska glikemia (peny)</button>
+                        <button class="guide-btn" data-guide="illness">🤒 Infekcja/Choroba</button>
+                        <button class="guide-btn" data-guide="snacking">🍪 Podjadanie</button>
+                        <button class="guide-btn" data-guide="holidays">🎄 Święta i wyjazdy</button>
+                        <button class="guide-btn" data-guide="school">🎒 Szkoła i wakacje</button>
+                        <button class="guide-btn" data-guide="critical">🚨 Sytuacje krytyczne</button>
+                        <button class="guide-btn" data-guide="practices">✅ Dobre praktyki</button>
+                        <button class="guide-btn" data-guide="calculations">🔢 Obliczanie ICR i ISF</button>
+                    </div>
+
+                    <div id="guide-content" class="guide-content"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Product Selection -->
+    <div id="product-select-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Wybierz produkt</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="modal-search" placeholder="Szukaj..." class="form-control">
+                <div id="modal-products-list"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Globalne zmienne
-        let products = [];
-        let currentMeal = [];
-        let editingProductId = null;
-        let html5QrcodeScanner = null;
-        let scannedCodes = {};
-
-        // Inicjalizacja aplikacji
-        function init() {
-            loadProducts();
-            loadMeal();
-            updateMealDisplay();
-            updateProductList();
-            updateProductSelect();
-        }
-
-        // LocalStorage - Produkty
-        function saveProductsToStorage() {
-            localStorage.setItem('products', JSON.stringify(products));
-        }
-
-        function loadProducts() {
-            const saved = localStorage.getItem('products');
-            if (saved) {
-                products = JSON.parse(saved);
-            } else {
-                // Domyślne produkty
-                products = [
-                    {id: 1, name: "Chleb pszenny", category: "pieczywo", unit: "gram", carbsPer100: 49, notes: "", ean: ""},
-                    {id: 2, name: "Banan", category: "owoce", unit: "gram", carbsPer100: 23.5, notes: "", ean: ""},
-                    {id: 3, name: "Jogurt naturalny", category: "nabiał", unit: "gram", carbsPer100: 4.7, notes: "", ean: ""},
-                    {id: 4, name: "Makaron ugotowany", category: "kasze i makarony", unit: "gram", carbsPer100: 30, notes: "", ean: ""},
-                    {id: 5, name: "Ziemniaki gotowane", category: "warzywa", unit: "gram", carbsPer100: 18, notes: "", ean: ""},
-                    {id: 6, name: "Jabłko", category: "owoce", unit: "gram", carbsPer100: 14, notes: "", ean: ""},
-                    {id: 7, name: "Mleko 2%", category: "nabiał", unit: "ml", carbsPer100: 4.8, notes: "", ean: ""}
-                ];
-                saveProductsToStorage();
-            }
-        }
-
-        // LocalStorage - Posiłek
-        function saveMealToStorage() {
-            localStorage.setItem('currentMeal', JSON.stringify(currentMeal));
-        }
-
-        function loadMeal() {
-            const saved = localStorage.getItem('currentMeal');
-            if (saved) {
-                currentMeal = JSON.parse(saved);
-            }
-        }
-
-        // Przełączanie zakładek
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-
-            if (tabName === 'products') {
-                updateProductList();
-            }
-        }
-
-        // Pokazywanie powiadomień
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.background = type === 'success' ? '#10b981' : '#dc2626';
-            notification.style.display = 'block';
-
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 2500);
-        }
-
-        // ===== FUNKCJE SKANERA =====
-        function startScanner() {
-            const qrReader = document.getElementById('qr-reader');
-            const statusDiv = document.getElementById('scannerStatus');
-
-            qrReader.style.display = 'block';
-            statusDiv.innerHTML = '<div class="product-loading">Uruchamianie kamery...</div>';
-
-            html5QrcodeScanner = new Html5QrcodeScanner(
-                "qr-reader",
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                false
-            );
-
-            html5QrcodeScanner.render(onScanSuccess, onScanError);
-        }
-
-        function stopScanner() {
-            if (html5QrcodeScanner) {
-                html5QrcodeScanner.clear();
-                html5QrcodeScanner = null;
-                document.getElementById('qr-reader').style.display = 'none';
-                document.getElementById('scannerStatus').innerHTML = '';
-            }
-        }
-
-        function onScanSuccess(decodedText, decodedResult) {
-            const ean = decodedText.trim();
-
-            // Uniknij skanowania tego samego kodu wiele razy
-            if (scannedCodes[ean]) {
-                return;
-            }
-
-            scannedCodes[ean] = true;
-            setTimeout(() => {
-                delete scannedCodes[ean];
-            }, 3000);
-
-            fetchProductData(ean);
-        }
-
-        function onScanError(error) {
-            // Cicho ignoruj błędy
-        }
-
-        async function fetchProductData(ean) {
-            const resultDiv = document.getElementById('scannerResult');
-            resultDiv.innerHTML = '<div class="product-loading">Szukam produktu w bazie...</div>';
-
-            try {
-                // Pobieranie z Open Food Facts API
-                const response = await fetch(
-                    `https://world.openfoodfacts.org/api/v0/product/${ean}.json`
-                );
-
-                if (!response.ok) {
-                    resultDiv.innerHTML = '<div class="product-error">Produkt nie znaleziony w bazie. Dodaj go ręcznie.</div>';
-                    return;
-                }
-
-                const data = await response.json();
-
-                if (data.status === 0) {
-                    resultDiv.innerHTML = '<div class="product-error">Produkt nie znaleziony. Spróbuj skanować inny kod.</div>';
-                    return;
-                }
-
-                const product = data.product;
-                const carbs = product.nutriments?.carbohydrates_100g || 0;
-                const name = product.product_name || "Nieznany produkt";
-                const brand = product.brands || "";
-
-                // Wyświetl wynik
-                const resultHTML = `
-                    <div class="product-result">
-                        <h4>${name}</h4>
-                        <p><strong>Marka:</strong> ${brand || "Brak danych"}</p>
-                        <p><strong>Węglowodany:</strong> ${carbs.toFixed(1)}g na 100g</p>
-                        <p><strong>Kod EAN:</strong> ${ean}</p>
-                        <button class="btn btn-success" style="margin-top: 10px;" onclick="addScannedProduct('${name.replace(/'/g, "\'")}', ${carbs}, '${ean}')">Dodaj do bazy</button>
+    <!-- Modal for Add/Edit Product -->
+    <div id="product-form-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="product-form-title">Dodaj produkt</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <input type="hidden" id="product-id">
+                    
+                    <div class="form-group">
+                        <label>Nazwa produktu <span class="required">*</span></label>
+                        <input type="text" id="product-name" class="form-control" required>
                     </div>
-                `;
-                resultDiv.innerHTML = resultHTML;
 
-            } catch (error) {
-                resultDiv.innerHTML = '<div class="product-error">Błąd połączenia. Sprawdź internetu i spróbuj ponownie.</div>';
-            }
-        }
-
-        function addScannedProduct(name, carbs, ean) {
-            // Sprawdź czy produkt już istnieje
-            if (products.some(p => p.ean === ean)) {
-                showNotification('Produkt już istnieje w bazie!', 'error');
-                return;
-            }
-
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                category: "inne",
-                unit: "gram",
-                carbsPer100: carbs,
-                notes: "Dodane ze skanowania",
-                ean: ean
-            };
-
-            products.push(newProduct);
-            saveProductsToStorage();
-            updateProductSelect();
-
-            document.getElementById('scannerResult').innerHTML = '<div class="product-result"><h4>Produkt dodany!</h4><p>Możesz teraz go używać w kalkulatorze.</p></div>';
-            showNotification('Produkt dodany do bazy!');
-        }
-
-        // Operacje na ilości
-        function incrementAmount() {
-            const input = document.getElementById('productAmount');
-            const current = parseInt(input.value) || 0;
-            input.value = current + 1;
-        }
-
-        function decrementAmount() {
-            const input = document.getElementById('productAmount');
-            const current = parseInt(input.value) || 1;
-            if (current > 1) {
-                input.value = current - 1;
-            }
-        }
-
-        // Formularz produktu
-        function showAddProductForm() {
-            document.getElementById('formTitle').textContent = 'Dodaj produkt';
-            document.getElementById('addProductForm').style.display = 'block';
-            document.getElementById('productName').value = '';
-            document.getElementById('productCategory').value = 'inne';
-            document.getElementById('productUnit').value = 'gram';
-            document.getElementById('productCarbs').value = '';
-            document.getElementById('productEAN').value = '';
-            document.getElementById('productNotes').value = '';
-            editingProductId = null;
-            document.getElementById('productName').focus();
-        }
-
-        function cancelProductForm() {
-            document.getElementById('addProductForm').style.display = 'none';
-            editingProductId = null;
-        }
-
-        function saveProduct() {
-            const name = document.getElementById('productName').value.trim();
-            const category = document.getElementById('productCategory').value;
-            const unit = document.getElementById('productUnit').value;
-            const carbsPer100 = parseFloat(document.getElementById('productCarbs').value);
-            const ean = document.getElementById('productEAN').value.trim();
-            const notes = document.getElementById('productNotes').value.trim();
-
-            if (!name || !carbsPer100 || carbsPer100 < 0 || isNaN(carbsPer100)) {
-                showNotification('Wypełnij wymagane pola!', 'error');
-                return;
-            }
-
-            if (editingProductId) {
-                const index = products.findIndex(p => p.id === editingProductId);
-                if (index !== -1) {
-                    products[index] = {
-                        ...products[index],
-                        name, category, unit, carbsPer100, notes, ean
-                    };
-                    showNotification('Produkt zaktualizowany!');
-                }
-            } else {
-                const newProduct = {
-                    id: Date.now(),
-                    name, category, unit, carbsPer100, notes, ean
-                };
-                products.push(newProduct);
-                showNotification('Produkt dodany!');
-            }
-
-            saveProductsToStorage();
-            cancelProductForm();
-            updateProductList();
-            updateProductSelect();
-        }
-
-        function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
-            document.getElementById('formTitle').textContent = 'Edytuj produkt';
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productUnit').value = product.unit;
-            document.getElementById('productCarbs').value = product.carbsPer100;
-            document.getElementById('productEAN').value = product.ean || '';
-            document.getElementById('productNotes').value = product.notes || '';
-            document.getElementById('addProductForm').style.display = 'block';
-            editingProductId = id;
-
-            document.getElementById('addProductForm').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function deleteProduct(id) {
-            if (!confirm('Usunąć ten produkt?')) return;
-
-            products = products.filter(p => p.id !== id);
-            saveProductsToStorage();
-            updateProductList();
-            updateProductSelect();
-            showNotification('Produkt usunięty!');
-        }
-
-        function updateProductList() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(searchTerm) ||
-                p.category.toLowerCase().includes(searchTerm)
-            );
-
-            const listHtml = filtered.length === 0 
-                ? '<div class="empty-state"><h3>Brak produktów</h3><p>Dodaj swój pierwszy produkt!</p></div>'
-                : filtered.map(product => `
-                    <div class="product-item">
-                        <div class="product-info">
-                            <h3>${product.name}<span class="category-badge">${product.category}</span></h3>
-                            <p>${product.carbsPer100}g na 100${product.unit}</p>
-                            ${product.ean ? `<p style="font-size: 11px; color: #94a3b8;">EAN: ${product.ean}</p>` : ''}
-                            ${product.notes ? `<p style="margin-top: 5px; font-style: italic;">${product.notes}</p>` : ''}
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-small" onclick="editProduct(${product.id})">Edytuj</button>
-                            <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Usuń</button>
-                        </div>
+                    <div class="form-group">
+                        <label>Kod EAN</label>
+                        <input type="text" id="product-ean" class="form-control">
                     </div>
-                `).join('');
 
-            document.getElementById('productList').innerHTML = listHtml;
-        }
-
-        function filterProducts() {
-            updateProductList();
-        }
-
-        // Aktualizacja listy wyboru produktów
-        function updateProductSelect() {
-            const select = document.getElementById('selectProduct');
-            select.innerHTML = '<option value="">-- Wybierz --</option>' +
-                products.map(p => `<option value="${p.id}">${p.name} (${p.carbsPer100}g/100${p.unit})</option>`).join('');
-        }
-
-        function loadProductData() {
-            const select = document.getElementById('selectProduct');
-            const productId = parseInt(select.value);
-            if (!productId) {
-                document.getElementById('productAmount').value = '';
-                return;
-            }
-        }
-
-        // Dodawanie do posiłku
-        function addToMeal() {
-            const productId = parseInt(document.getElementById('selectProduct').value);
-            const amount = parseFloat(document.getElementById('productAmount').value);
-
-            if (!productId || !amount || amount <= 0) {
-                showNotification('Wybierz produkt i podaj ilość!', 'error');
-                return;
-            }
-
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const carbs = (amount * product.carbsPer100) / 100;
-
-            currentMeal.push({
-                id: Date.now(),
-                productId: product.id,
-                productName: product.name,
-                amount: amount,
-                unit: product.unit,
-                carbs: carbs
-            });
-
-            saveMealToStorage();
-            updateMealDisplay();
-
-            // Resetuj formularz
-            document.getElementById('selectProduct').value = '';
-            document.getElementById('productAmount').value = '';
-            document.getElementById('selectProduct').focus();
-
-            showNotification('Dodano!');
-        }
-
-        function removeFromMeal(id) {
-            currentMeal = currentMeal.filter(item => item.id !== id);
-            saveMealToStorage();
-            updateMealDisplay();
-            showNotification('Usunięto!');
-        }
-
-        function updateMealDisplay() {
-            const totalCarbs = currentMeal.reduce((sum, item) => sum + item.carbs, 0);
-            const totalWW = totalCarbs / 10;
-
-            document.getElementById('totalCarbs').textContent = totalCarbs.toFixed(1) + 'g';
-            document.getElementById('totalWW').textContent = totalWW.toFixed(1) + 'WW';
-
-            const listHtml = currentMeal.length === 0
-                ? '<div class="empty-state"><h3>Brak produktów</h3><p>Dodaj produkty do posiłku</p></div>'
-                : currentMeal.map(item => `
-                    <div class="meal-item">
-                        <div class="meal-item-info">
-                            <div class="meal-item-name">${item.productName}</div>
-                            <div class="meal-item-details">
-                                ${item.amount}${item.unit} • ${item.carbs.toFixed(1)}g w/w
-                            </div>
-                        </div>
-                        <button class="btn btn-danger" onclick="removeFromMeal(${item.id})">Usuń</button>
+                    <div class="form-group">
+                        <label>Jednostka <span class="required">*</span></label>
+                        <select id="product-unit" class="form-control" required>
+                            <option value="g">gramy (g)</option>
+                            <option value="ml">mililitry (ml)</option>
+                        </select>
                     </div>
-                `).join('');
 
-            document.getElementById('mealList').innerHTML = listHtml;
-        }
+                    <div class="form-group">
+                        <label>Węglowodany (na 100g/100ml) <span class="required">*</span></label>
+                        <input type="number" id="product-carbs" inputmode="decimal" step="0.1" class="form-control" required>
+                    </div>
 
-        function clearMeal() {
-            if (currentMeal.length === 0) return;
-            if (!confirm('Wyczyścić posiłek?')) return;
+                    <div class="form-group">
+                        <label>Białko (na 100g/100ml)</label>
+                        <input type="number" id="product-protein" inputmode="decimal" step="0.1" class="form-control">
+                    </div>
 
-            currentMeal = [];
-            saveMealToStorage();
-            updateMealDisplay();
-            showNotification('Posiłek wyczyszczony!');
-        }
+                    <div class="form-group">
+                        <label>Tłuszcze (na 100g/100ml)</label>
+                        <input type="number" id="product-fat" inputmode="decimal" step="0.1" class="form-control">
+                    </div>
 
-        // Inicjalizacja przy załadowaniu
-        window.onload = init;
-    </script>
+                    <div class="form-group">
+                        <label>Kalorie (na 100g/100ml)</label>
+                        <input type="number" id="product-calories" inputmode="decimal" step="1" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kategoria <span class="required">*</span></label>
+                        <select id="product-category" class="form-control" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notatki</label>
+                        <textarea id="product-notes" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--secondary modal-close">Anuluj</button>
+                        <button type="submit" class="btn btn--primary">Zapisz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>

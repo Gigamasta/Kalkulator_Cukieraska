@@ -403,6 +403,17 @@
             outline: none;
         }
 
+        /* Ukrycie strzałek dla input[type=number] na desktopie */
+        .number-input-wrapper input::-webkit-outer-spin-button,
+        .number-input-wrapper input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .number-input-wrapper input[type=number] {
+            -moz-appearance: textfield;
+        }
+
         .search-box {
             position: relative;
             margin-bottom: 16px;
@@ -608,7 +619,7 @@
                         <label class="form-required">Ilość</label>
                         <div class="number-input-wrapper">
                             <button class="number-btn" onclick="decrementAmount()">−</button>
-                            <input type="number" id="productAmount" placeholder="0" min="1" step="1" onkeypress="if(event.key==='Enter') addToMeal()">
+                            <input type="number" id="productAmount" inputmode="numeric" pattern="[0-9]*" placeholder="0" min="1" step="1" onkeypress="if(event.key==='Enter') addToMeal()">
                             <button class="number-btn" onclick="incrementAmount()">+</button>
                         </div>
                     </div>

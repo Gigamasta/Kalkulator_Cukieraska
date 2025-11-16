@@ -1907,6 +1907,16 @@ function loadSampleData() {
   
   renderProducts();
 }
+// --- dot nowego skanera ---
+// --- Logika przycisków jednostek ---
+document.querySelectorAll('.unit-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('prod-unit').value = this.getAttribute('data-unit');
+  });
+});
 
 // --- Skaner barcode ---
 document.getElementById('start-barcode').onclick = function () {
@@ -1929,7 +1939,6 @@ document.getElementById('start-barcode').onclick = function () {
     const code = data.codeResult.code;
     Quagga.stop();
     document.getElementById("scanner-status").textContent = "✓ Kod zeskanowany: " + code;
-    // Pobierz dane z Open Food Facts
     fetch("https://world.openfoodfacts.org/api/v2/product/" + code + ".json")
       .then(r => r.json())
       .then(result => {
@@ -1976,7 +1985,7 @@ document.getElementById('label-photo').onchange = function (e) {
     });
 };
 
-// -- Dodawanie do IndexedDB (funkcja saveProductToIndexedDB musi już być w app.js aplikacji) --
+// -- Dodawanie do IndexedDB --
 document.getElementById("add-product-form").onsubmit = function (e) {
   e.preventDefault();
   const product = {
@@ -1995,4 +2004,5 @@ document.getElementById("add-product-form").onsubmit = function (e) {
   saveProductToIndexedDB(product);
   document.getElementById("product-form-preview").classList.add("hidden");
   document.getElementById("scanner-status").textContent = "✓ Produkt dodany do bazy";
+  document.getElementById("add-product-form").reset();
 };

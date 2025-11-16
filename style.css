@@ -1545,6 +1545,10 @@ textarea.form-control {
   margin-top: var(--space-16);
 }
 
+.form-actions .btn {
+  min-width: 120px;
+}
+
 /* History */
 .history-item {
   padding: var(--space-12);

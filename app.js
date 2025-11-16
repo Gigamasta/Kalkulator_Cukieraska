@@ -1,6 +1,11 @@
 // Alexander Diabetes Manager - Main Application
 
-// State management using JavaScript objects (no localStorage due to sandbox)
+// IndexedDB Database
+let db = null;
+const DB_NAME = 'AlexanderDiabetesDB';
+const DB_VERSION = 1;
+
+// State management using JavaScript objects
 const AppState = {
   products: [],
   categories: ['Piekarnicze', 'Owoce', 'Warzywa', 'Mleko', 'Mięso', 'Słodyczne', 'Napoje', 'Inne'],
@@ -18,14 +23,217 @@ const AppState = {
 };
 
 // Initialize app
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await initializeDatabase();
+  await loadDataFromDB();
   initializeTabs();
   initializeCalculator();
   initializeProducts();
   initializeScanner();
   initializeGuide();
-  loadSampleData();
+  
+  // Load sample data only if database is empty
+  if (AppState.products.length === 0) {
+    loadSampleData();
+    await saveAllData();
+  }
 });
+
+// IndexedDB initialization
+function initializeDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    
+    request.onerror = () => {
+      console.error('IndexedDB error:', request.error);
+      alert('Nie można otworzyć bazy danych. Dane nie będą zapisywane.');
+      resolve(); // Continue without DB
+    };
+    
+    request.onsuccess = () => {
+      db = request.result;
+      console.log('Database opened successfully');
+      resolve();
+    };
+    
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      
+      // Create object stores
+      if (!db.objectStoreNames.contains('products')) {
+        const productStore = db.createObjectStore('products', { keyPath: 'id' });
+        productStore.createIndex('category', 'category', { unique: false });
+        productStore.createIndex('dateAdded', 'dateAdded', { unique: false });
+        productStore.createIndex('name', 'name', { unique: false });
+      }
+      
+      if (!db.objectStoreNames.contains('bolusHistory')) {
+        const historyStore = db.createObjectStore('bolusHistory', { keyPath: 'id', autoIncrement: true });
+        historyStore.createIndex('timestamp', 'timestamp', { unique: false });
+      }
+      
+      if (!db.objectStoreNames.contains('settings')) {
+        db.createObjectStore('settings', { keyPath: 'name' });
+      }
+      
+      if (!db.objectStoreNames.contains('categories')) {
+        db.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
+}
+
+// Load data from IndexedDB
+async function loadDataFromDB() {
+  if (!db) return;
+  
+  try {
+    // Load products
+    const products = await getFromDB('products');
+    if (products.length > 0) {
+      AppState.products = products;
+    }
+    
+    // Load bolus history
+    const history = await getFromDB('bolusHistory');
+    if (history.length > 0) {
+      AppState.bolusHistory = history;
+    }
+    
+    // Load categories
+    const categories = await getFromDB('categories');
+    if (categories.length > 0) {
+      AppState.categories = categories.map(c => c.name);
+    }
+    
+    // Load settings
+    const settings = await getFromDBByKey('settings', 'parameters');
+    if (settings) {
+      AppState.parameters = settings.value;
+    }
+    
+    console.log('Data loaded from IndexedDB');
+  } catch (error) {
+    console.error('Error loading data:', error);
+  }
+}
+
+// Generic function to get all items from a store
+function getFromDB(storeName) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      resolve([]);
+      return;
+    }
+    
+    const transaction = db.transaction([storeName], 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+    
+    request.onsuccess = () => resolve(request.result || []);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Get single item by key
+function getFromDBByKey(storeName, key) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      resolve(null);
+      return;
+    }
+    
+    const transaction = db.transaction([storeName], 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.get(key);
+    
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Save to IndexedDB
+function saveToDB(storeName, data) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      resolve();
+      return;
+    }
+    
+    const transaction = db.transaction([storeName], 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.put(data);
+    
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Delete from IndexedDB
+function deleteFromDB(storeName, key) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      resolve();
+      return;
+    }
+    
+    const transaction = db.transaction([storeName], 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.delete(key);
+    
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Clear store
+function clearStore(storeName) {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      resolve();
+      return;
+    }
+    
+    const transaction = db.transaction([storeName], 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.clear();
+    
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Save all data
+async function saveAllData() {
+  if (!db) return;
+  
+  try {
+    // Save products
+    await clearStore('products');
+    for (const product of AppState.products) {
+      await saveToDB('products', product);
+    }
+    
+    // Save categories
+    await clearStore('categories');
+    for (const category of AppState.categories) {
+      await saveToDB('categories', { name: category });
+    }
+    
+    // Save bolus history
+    await clearStore('bolusHistory');
+    for (const entry of AppState.bolusHistory) {
+      await saveToDB('bolusHistory', entry);
+    }
+    
+    // Save settings
+    await saveToDB('settings', { name: 'parameters', value: AppState.parameters });
+    
+    console.log('All data saved to IndexedDB');
+  } catch (error) {
+    console.error('Error saving data:', error);
+  }
+}
 
 // Tab navigation
 function initializeTabs() {
@@ -115,8 +323,11 @@ function calculateBolus() {
   document.getElementById('bolus-result').style.display = 'block';
 }
 
-function confirmAndSaveBolus() {
+async function confirmAndSaveBolus() {
   if (!pendingBolus) return;
+  
+  // Add ID for IndexedDB
+  pendingBolus.id = generateId();
   
   // Add to history
   AppState.bolusHistory.unshift(pendingBolus);
@@ -124,6 +335,9 @@ function confirmAndSaveBolus() {
   if (AppState.bolusHistory.length > 20) {
     AppState.bolusHistory = AppState.bolusHistory.slice(0, 20);
   }
+  
+  // Save to IndexedDB
+  await saveToDB('bolusHistory', pendingBolus);
   
   renderBolusHistory();
   
@@ -229,9 +443,16 @@ function renderBolusHistory() {
   `).join('');
 }
 
-function deleteHistoryEntry(index) {
+async function deleteHistoryEntry(index) {
   if (confirm('Czy na pewno chcesz usunąć tę pozycję z historii?')) {
+    const entry = AppState.bolusHistory[index];
     AppState.bolusHistory.splice(index, 1);
+    
+    // Delete from IndexedDB
+    if (entry.id) {
+      await deleteFromDB('bolusHistory', entry.id);
+    }
+    
     renderBolusHistory();
   }
 }
@@ -266,7 +487,7 @@ function renderCategories() {
   `).join('');
 }
 
-function addCategory() {
+async function addCategory() {
   const input = document.getElementById('new-category-input');
   const newCategory = input.value.trim();
   
@@ -283,12 +504,15 @@ function addCategory() {
   AppState.categories.push(newCategory);
   input.value = '';
   
+  // Save to IndexedDB
+  await saveToDB('categories', { name: newCategory });
+  
   renderCategories();
   populateCategoryFilter();
   populateCategorySelect();
 }
 
-function deleteCategory(category) {
+async function deleteCategory(category) {
   const productsUsingCategory = AppState.products.filter(p => p.category === category);
   
   if (productsUsingCategory.length > 0) {
@@ -297,12 +521,16 @@ function deleteCategory(category) {
     }
     
     // Move products to "Inne"
-    productsUsingCategory.forEach(product => {
+    for (const product of productsUsingCategory) {
       product.category = 'Inne';
-    });
+      await saveToDB('products', product);
+    }
   }
   
   AppState.categories = AppState.categories.filter(c => c !== category);
+  
+  // Save categories
+  await saveAllData();
   
   renderCategories();
   populateCategoryFilter();
@@ -424,15 +652,19 @@ function editProduct(id) {
   openProductForm(id);
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
   if (confirm('Czy na pewno chcesz usunąć ten produkt?')) {
     AppState.products = AppState.products.filter(p => p.id !== id);
+    
+    // Delete from IndexedDB
+    await deleteFromDB('products', id);
+    
     renderProducts();
   }
 }
 
 // Product form submission
-document.getElementById('product-form').addEventListener('submit', (e) => {
+document.getElementById('product-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   
   const productId = document.getElementById('product-id').value;
@@ -463,6 +695,9 @@ document.getElementById('product-form').addEventListener('submit', (e) => {
   } else {
     AppState.products.push(productData);
   }
+  
+  // Save to IndexedDB
+  await saveToDB('products', productData);
   
   document.getElementById('product-form-modal').classList.remove('active');
   renderProducts();
@@ -766,7 +1001,7 @@ function displayScannedProduct(productData) {
   container.style.display = 'block';
 }
 
-function addScannedProduct(productData) {
+async function addScannedProduct(productData) {
   const newProduct = {
     id: generateId(),
     name: productData.name,
@@ -782,6 +1017,9 @@ function addScannedProduct(productData) {
   };
   
   AppState.products.push(newProduct);
+  
+  // Save to IndexedDB
+  await saveToDB('products', newProduct);
   
   alert('✓ Produkt "' + productData.name + '" został dodany do bazy!');
   

@@ -185,7 +185,7 @@
 <!-- Skaner produktu -->
             <!-- class="tab hidden" -->
 <div id="scanner-tab" class="tab-pane">
-  <h2>Skaner produktu</h2>
+    <h2>Skaner produktu</h2>
   <div class="scanner-options">
     <button id="start-barcode">Skanuj kod kreskowy</button>
     <button id="upload-label">Zrób zdjęcie etykiety</button>
@@ -197,8 +197,27 @@
     <h3>Podgląd produktu do dodania</h3>
     <form id="add-product-form">
       <input type="text" id="prod-name" placeholder="Nazwa produktu*" required>
-      <input type="text" id="prod-cat" placeholder="Kategoria*" required>
-      <input type="text" id="prod-unit" placeholder="Jednostka (g/ml)*" required>
+      
+      <label for="prod-cat">Kategoria*</label>
+      <select id="prod-cat" required>
+        <option value="">-- Wybierz kategorię --</option>
+        <option value="Piekarnicze">Piekarnicze</option>
+        <option value="Owoce">Owoce</option>
+        <option value="Warzywa">Warzywa</option>
+        <option value="Mleko">Mleko</option>
+        <option value="Mięso">Mięso</option>
+        <option value="Słodkie">Słodkie</option>
+        <option value="Napoje">Napoje</option>
+        <option value="Inne">Inne</option>
+      </select>
+      
+      <label for="prod-unit">Jednostka*</label>
+      <div id="unit-buttons">
+        <button type="button" class="unit-btn" data-unit="gramy">Gramy</button>
+        <button type="button" class="unit-btn" data-unit="mililitry">Mililitry</button>
+      </div>
+      <input type="hidden" id="prod-unit" required>
+      
       <input type="text" id="prod-carb" placeholder="Węglowodany (g)*" required>
       <input type="text" id="prod-protein" placeholder="Białko (g)">
       <input type="text" id="prod-fat" placeholder="Tłuszcze (g)">

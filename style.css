@@ -1784,3 +1784,23 @@ textarea.form-control {
 .scanner-video { width: 100%; max-width: 300px; margin: 15px auto;}
 #product-form-preview { background: #e3f2fd; padding: 16px; border-radius: 6px; margin-top: 10px;}
 .scanner-options { display: flex; gap: 12px; margin-bottom: 12px; }
+
+#unit-buttons { display: flex; gap: 10px; margin: 8px 0; }
+.unit-btn {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #2196F3;
+  background: white;
+  color: #2196F3;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.unit-btn.active {
+  background: #2196F3;
+  color: white;
+}
+.unit-btn:hover {
+  background: #E3F2FD;
+}
+

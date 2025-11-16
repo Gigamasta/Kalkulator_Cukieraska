@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Alexander Diabetes Manager</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -41,22 +41,23 @@
                     <h2>Kalkulator Bolusa</h2>
                     
                     <div class="card">
-                        <h3>Aktualna Glikemia <span class="required">*</span></h3>
-                        <div class="input-group">
-                            <input type="number" id="glucose-level" inputmode="numeric" placeholder="np. 120" class="form-control">
-                            <span class="unit">mg/dl</span>
+                        <h3>Wybierz produkty lub wprowadź WW</h3>
+                        <div class="product-selection" id="selected-products"></div>
+                        <div id="products-summary" style="margin: var(--space-12) 0; padding: var(--space-12); background: var(--color-bg-3); border-radius: var(--radius-base); font-weight: var(--font-weight-medium);"></div>
+                        <button class="btn btn--secondary" id="add-product-btn">+ Dodaj produkt</button>
+                        
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <label>Lub wprowadź bezpośrednio węglowodany:</label>
+                            <input type="number" id="manual-carbs" inputmode="decimal" step="0.1" placeholder="" class="form-control">
+                            <span class="unit">g</span>
                         </div>
                     </div>
 
                     <div class="card">
-                        <h3>Wybierz produkty lub wprowadź WW</h3>
-                        <div class="product-selection" id="selected-products"></div>
-                        <button class="btn btn--secondary" id="add-product-btn">+ Dodaj produkt</button>
-                        
-                        <div class="input-group" style="margin-top: 1rem;">
-                            <label>Lub wprowadź bezpośrednio WW:</label>
-                            <input type="number" id="manual-ww" inputmode="decimal" step="0.1" placeholder="0" class="form-control">
-                            <span class="unit">WW</span>
+                        <h3>Aktualna Glikemia <span class="required">*</span></h3>
+                        <div class="input-group">
+                            <input type="number" id="glucose-level" inputmode="numeric" placeholder="np. 120" class="form-control">
+                            <span class="unit">mg/dl</span>
                         </div>
                     </div>
 
@@ -103,6 +104,10 @@
                                 <span id="total-carbs">0</span> g
                             </div>
                         </div>
+                        <div style="display: flex; gap: var(--space-12); margin-top: var(--space-16);">
+                            <button class="btn btn--primary" id="confirm-bolus" style="flex: 1;">✓ Zatwierdź i zapisz do historii</button>
+                            <button class="btn btn--secondary" id="cancel-bolus" style="flex: 1;">✕ Anuluj</button>
+                        </div>
                     </div>
 
                     <div class="card">
@@ -132,6 +137,15 @@
 
                     <button class="btn btn--primary" id="add-new-product">+ Dodaj nowy produkt</button>
 
+                    <div class="card" style="margin-top: var(--space-24);">
+                        <h3>Zarządzaj kategoriami</h3>
+                        <div id="categories-list" style="display: flex; flex-wrap: wrap; gap: var(--space-8); margin-bottom: var(--space-12);"></div>
+                        <div style="display: flex; gap: var(--space-8);">
+                            <input type="text" id="new-category-input" placeholder="Nowa kategoria" class="form-control" style="flex: 1;">
+                            <button class="btn btn--primary" id="add-category-btn">+ Dodaj</button>
+                        </div>
+                    </div>
+
                     <div id="products-list" class="products-grid"></div>
                 </div>
             </div>
@@ -147,9 +161,14 @@
                             <button class="btn btn--secondary" id="start-ocr-scan">🔍 Skanuj etykietę (OCR)</button>
                         </div>
 
+                        <div id="scanner-status" class="scanner-status" style="display:none;"></div>
+
                         <div id="camera-container" style="display:none;">
                             <video id="camera-preview" autoplay playsinline></video>
                             <canvas id="scanner-canvas" style="display:none;"></canvas>
+                            <div id="ocr-capture-container" style="display:none; margin-top: var(--space-16);">
+                                <button class="btn btn--primary btn--full-width" id="capture-photo">📸 Zrób zdjęcie etykiety</button>
+                            </div>
                             <div class="scanner-overlay">
                                 <div class="scan-region"></div>
                             </div>
@@ -214,45 +233,65 @@
                     
                     <div class="form-group">
                         <label>Nazwa produktu <span class="required">*</span></label>
-                        <input type="text" id="product-name" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Kod EAN</label>
-                        <input type="text" id="product-ean" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Jednostka <span class="required">*</span></label>
-                        <select id="product-unit" class="form-control" required>
-                            <option value="g">gramy (g)</option>
-                            <option value="ml">mililitry (ml)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Węglowodany (na 100g/100ml) <span class="required">*</span></label>
-                        <input type="number" id="product-carbs" inputmode="decimal" step="0.1" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Białko (na 100g/100ml)</label>
-                        <input type="number" id="product-protein" inputmode="decimal" step="0.1" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tłuszcze (na 100g/100ml)</label>
-                        <input type="number" id="product-fat" inputmode="decimal" step="0.1" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Kalorie (na 100g/100ml)</label>
-                        <input type="number" id="product-calories" inputmode="decimal" step="1" class="form-control">
+                        <div class="input-wrapper">
+                            <input type="search" id="product-name" class="form-control" required>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label>Kategoria <span class="required">*</span></label>
-                        <select id="product-category" class="form-control" required></select>
+                        <select id="product-category" class="form-control" required>
+                            <option value="">Wybierz kategorię</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kod EAN</label>
+                        <div class="input-wrapper">
+                            <input type="search" id="product-ean" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jednostka <span class="required">*</span></label>
+                        <div class="unit-selector">
+                            <label class="radio-btn">
+                                <input type="radio" name="product-unit" value="g" required>
+                                <span>Gramy (g)</span>
+                            </label>
+                            <label class="radio-btn">
+                                <input type="radio" name="product-unit" value="ml">
+                                <span>Mililitry (ml)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Węglowodany (na 100g/100ml) <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="number" id="product-carbs" inputmode="decimal" step="0.1" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Białko (na 100g/100ml)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="product-protein" inputmode="decimal" step="0.1" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tłuszcze (na 100g/100ml)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="product-fat" inputmode="decimal" step="0.1" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kalorie (na 100g/100ml)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="product-calories" inputmode="decimal" step="1" class="form-control">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -261,8 +300,8 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn btn--secondary modal-close">Anuluj</button>
-                        <button type="submit" class="btn btn--primary">Zapisz</button>
+                        <button type="button" class="btn btn--secondary modal-close">✕ Anuluj</button>
+                        <button type="submit" class="btn btn--primary">✓ Zapisz</button>
                     </div>
                 </form>
             </div>

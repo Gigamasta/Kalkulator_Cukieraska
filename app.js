@@ -55,20 +55,26 @@ function initializeTabs() {
 function initializeCalculator() {
   const calculateBtn = document.getElementById('calculate-bolus');
   const addProductBtn = document.getElementById('add-product-btn');
+  const confirmBtn = document.getElementById('confirm-bolus');
+  const cancelBtn = document.getElementById('cancel-bolus');
   
   calculateBtn.addEventListener('click', calculateBolus);
   addProductBtn.addEventListener('click', openProductSelectModal);
+  confirmBtn.addEventListener('click', confirmAndSaveBolus);
+  cancelBtn.addEventListener('click', cancelBolus);
   
   renderSelectedProducts();
   renderBolusHistory();
 }
+
+let pendingBolus = null;
 
 function calculateBolus() {
   const glucoseLevel = parseFloat(document.getElementById('glucose-level').value);
   const targetGlucose = parseFloat(document.getElementById('target-glucose').value);
   const icr = parseFloat(document.getElementById('icr').value);
   const isf = parseFloat(document.getElementById('isf').value);
-  const manualWW = parseFloat(document.getElementById('manual-ww').value) || 0;
+  const manualCarbs = parseFloat(document.getElementById('manual-carbs').value) || 0;
   
   if (!glucoseLevel || glucoseLevel <= 0) {
     alert('Proszę wprowadzić prawidłowy poziom glikemii');
@@ -76,7 +82,7 @@ function calculateBolus() {
   }
   
   // Calculate total carbs from selected products
-  let totalCarbs = manualWW * 10; // Convert WW to grams
+  let totalCarbs = manualCarbs;
   
   AppState.selectedProducts.forEach(item => {
     const product = AppState.products.find(p => p.id === item.productId);
@@ -91,49 +97,79 @@ function calculateBolus() {
   const correctionBolus = (glucoseLevel - targetGlucose) / isf;
   const totalBolus = Math.max(0, mealBolus + correctionBolus);
   
-  // Display results
-  document.getElementById('meal-bolus').textContent = mealBolus.toFixed(2);
-  document.getElementById('correction-bolus').textContent = correctionBolus.toFixed(2);
-  document.getElementById('total-bolus').textContent = totalBolus.toFixed(2);
-  document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
-  document.getElementById('bolus-result').style.display = 'block';
-  
-  // Add to history
-  AppState.bolusHistory.unshift({
+  // Store pending bolus
+  pendingBolus = {
     timestamp: new Date(),
     glucose: glucoseLevel,
     carbs: totalCarbs,
     totalBolus: totalBolus,
     mealBolus: mealBolus,
     correctionBolus: correctionBolus
-  });
+  };
   
-  if (AppState.bolusHistory.length > 10) {
-    AppState.bolusHistory = AppState.bolusHistory.slice(0, 10);
+  // Display results
+  document.getElementById('meal-bolus').textContent = mealBolus.toFixed(2);
+  document.getElementById('correction-bolus').textContent = correctionBolus.toFixed(2);
+  document.getElementById('total-bolus').textContent = totalBolus.toFixed(2);
+  document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
+  document.getElementById('bolus-result').style.display = 'block';
+}
+
+function confirmAndSaveBolus() {
+  if (!pendingBolus) return;
+  
+  // Add to history
+  AppState.bolusHistory.unshift(pendingBolus);
+  
+  if (AppState.bolusHistory.length > 20) {
+    AppState.bolusHistory = AppState.bolusHistory.slice(0, 20);
   }
   
   renderBolusHistory();
+  
+  // Clear pending and hide result
+  pendingBolus = null;
+  document.getElementById('bolus-result').style.display = 'none';
+  
+  // Reset form
+  document.getElementById('glucose-level').value = '';
+  document.getElementById('manual-carbs').value = '';
+  AppState.selectedProducts = [];
+  renderSelectedProducts();
+  
+  alert('✓ Bolus zapisany do historii!');
+}
+
+function cancelBolus() {
+  pendingBolus = null;
+  document.getElementById('bolus-result').style.display = 'none';
 }
 
 function renderSelectedProducts() {
   const container = document.getElementById('selected-products');
+  const summaryContainer = document.getElementById('products-summary');
   
   if (AppState.selectedProducts.length === 0) {
     container.innerHTML = '<p class="empty-state" style="padding: var(--space-16); margin: 0;">Brak wybranych produktów</p>';
+    summaryContainer.style.display = 'none';
     return;
   }
+  
+  let totalCarbs = 0;
+  let totalProducts = AppState.selectedProducts.length;
   
   container.innerHTML = AppState.selectedProducts.map((item, index) => {
     const product = AppState.products.find(p => p.id === item.productId);
     if (!product) return '';
     
     const carbsPerUnit = product.carbs / 100;
-    const totalCarbs = (carbsPerUnit * item.quantity).toFixed(1);
+    const itemCarbs = carbsPerUnit * item.quantity;
+    totalCarbs += itemCarbs;
     
     return `
       <div class="selected-product-item">
         <div class="selected-product-name">
-          ${product.name} (${totalCarbs}g węgl.)
+          ${product.name} (${itemCarbs.toFixed(1)}g węgl.)
         </div>
         <div class="quantity-controls">
           <button class="quantity-btn" onclick="changeProductQuantity(${index}, -10)">-</button>
@@ -142,10 +178,15 @@ function renderSelectedProducts() {
           <span class="unit-small">${product.unit}</span>
           <button class="quantity-btn" onclick="changeProductQuantity(${index}, 10)">+</button>
         </div>
-        <button class="remove-product-btn" onclick="removeSelectedProduct(${index}">✕</button>
+        <button class="remove-product-btn" onclick="removeSelectedProduct(${index})">✕</button>
       </div>
     `;
   }).join('');
+  
+  // Update summary
+  const ww = (totalCarbs / 10).toFixed(1);
+  summaryContainer.innerHTML = `Razem: <strong>${totalProducts}</strong> produktów, <strong>${totalCarbs.toFixed(1)}g</strong> węglowodanow (<strong>${ww} WW</strong>)`;
+  summaryContainer.style.display = 'block';
 }
 
 function changeProductQuantity(index, delta) {
@@ -171,9 +212,12 @@ function renderBolusHistory() {
     return;
   }
   
-  container.innerHTML = AppState.bolusHistory.map(entry => `
+  container.innerHTML = AppState.bolusHistory.map((entry, index) => `
     <div class="history-item">
-      <div class="history-time">${formatDate(entry.timestamp)}</div>
+      <div class="history-item-header">
+        <div class="history-time">${formatDate(entry.timestamp)}</div>
+        <button class="delete-history-btn" onclick="deleteHistoryEntry(${index})" title="Usuń">🗑️ Usuń</button>
+      </div>
       <div class="history-data">
         <div><strong>Glikemia:</strong> ${entry.glucose} mg/dl</div>
         <div><strong>Węglowodany:</strong> ${entry.carbs.toFixed(1)}g</div>
@@ -185,18 +229,82 @@ function renderBolusHistory() {
   `).join('');
 }
 
+function deleteHistoryEntry(index) {
+  if (confirm('Czy na pewno chcesz usunąć tę pozycję z historii?')) {
+    AppState.bolusHistory.splice(index, 1);
+    renderBolusHistory();
+  }
+}
+
 // PRODUCTS TAB
 function initializeProducts() {
   const addBtn = document.getElementById('add-new-product');
   const searchInput = document.getElementById('search-products');
   const categoryFilter = document.getElementById('category-filter');
   const sortSelect = document.getElementById('sort-products');
+  const addCategoryBtn = document.getElementById('add-category-btn');
   
   addBtn.addEventListener('click', () => openProductForm());
   searchInput.addEventListener('input', renderProducts);
   categoryFilter.addEventListener('change', renderProducts);
   sortSelect.addEventListener('change', renderProducts);
+  addCategoryBtn.addEventListener('click', addCategory);
   
+  populateCategoryFilter();
+  populateCategorySelect();
+  renderProducts();
+  renderCategories();
+}
+
+function renderCategories() {
+  const container = document.getElementById('categories-list');
+  container.innerHTML = AppState.categories.map(cat => `
+    <div class="category-tag">
+      <span>${cat}</span>
+      <button onclick="deleteCategory('${cat}')" title="Usuń kategorię">×</button>
+    </div>
+  `).join('');
+}
+
+function addCategory() {
+  const input = document.getElementById('new-category-input');
+  const newCategory = input.value.trim();
+  
+  if (!newCategory) {
+    alert('Wprowadź nazwę kategorii');
+    return;
+  }
+  
+  if (AppState.categories.includes(newCategory)) {
+    alert('Ta kategoria już istnieje');
+    return;
+  }
+  
+  AppState.categories.push(newCategory);
+  input.value = '';
+  
+  renderCategories();
+  populateCategoryFilter();
+  populateCategorySelect();
+}
+
+function deleteCategory(category) {
+  const productsUsingCategory = AppState.products.filter(p => p.category === category);
+  
+  if (productsUsingCategory.length > 0) {
+    if (!confirm(`Kategoria "${category}" jest używana przez ${productsUsingCategory.length} produkt(y/ów). Czy na pewno chcesz ją usunąć? Produkty zostaną przeniesione do kategorii "Inne".`)) {
+      return;
+    }
+    
+    // Move products to "Inne"
+    productsUsingCategory.forEach(product => {
+      product.category = 'Inne';
+    });
+  }
+  
+  AppState.categories = AppState.categories.filter(c => c !== category);
+  
+  renderCategories();
   populateCategoryFilter();
   populateCategorySelect();
   renderProducts();
@@ -210,7 +318,8 @@ function populateCategoryFilter() {
 
 function populateCategorySelect() {
   const select = document.getElementById('product-category');
-  select.innerHTML = AppState.categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+  select.innerHTML = '<option value="">Wybierz kategorię</option>' + 
+    AppState.categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
 }
 
 function renderProducts() {
@@ -296,7 +405,7 @@ function openProductForm(productId = null) {
       document.getElementById('product-id').value = product.id;
       document.getElementById('product-name').value = product.name;
       document.getElementById('product-ean').value = product.ean || '';
-      document.getElementById('product-unit').value = product.unit;
+      document.querySelector(`input[name="product-unit"][value="${product.unit}"]`).checked = true;
       document.getElementById('product-carbs').value = product.carbs;
       document.getElementById('product-protein').value = product.protein || '';
       document.getElementById('product-fat').value = product.fat || '';
@@ -327,11 +436,18 @@ document.getElementById('product-form').addEventListener('submit', (e) => {
   e.preventDefault();
   
   const productId = document.getElementById('product-id').value;
+  const selectedUnit = document.querySelector('input[name="product-unit"]:checked');
+  
+  if (!selectedUnit) {
+    alert('Wybierz jednostkę');
+    return;
+  }
+  
   const productData = {
     id: productId || generateId(),
     name: document.getElementById('product-name').value,
     ean: document.getElementById('product-ean').value,
-    unit: document.getElementById('product-unit').value,
+    unit: selectedUnit.value,
     carbs: parseFloat(document.getElementById('product-carbs').value),
     protein: parseFloat(document.getElementById('product-protein').value) || null,
     fat: parseFloat(document.getElementById('product-fat').value) || null,
@@ -400,15 +516,51 @@ document.getElementById('modal-search').addEventListener('input', (e) => {
 });
 
 // SCANNER TAB
+let barcodeDetectionInterval = null;
+let html5QrCode = null;
+
 function initializeScanner() {
   document.getElementById('start-barcode-scan').addEventListener('click', () => startScanning('barcode'));
   document.getElementById('start-ocr-scan').addEventListener('click', () => startScanning('ocr'));
   document.getElementById('stop-scan').addEventListener('click', stopCamera);
+  document.getElementById('capture-photo').addEventListener('click', captureAndProcessOCR);
+  
+  // Load html5-qrcode library
+  if (!document.getElementById('html5-qrcode-script')) {
+    const script = document.createElement('script');
+    script.id = 'html5-qrcode-script';
+    script.src = 'https://cdn.jsdelivr.net/npm/html5-qrcode/html5-qrcode.min.js';
+    document.head.appendChild(script);
+  }
+  
+  // Load Tesseract.js for OCR
+  if (!document.getElementById('tesseract-script')) {
+    const script = document.createElement('script');
+    script.id = 'tesseract-script';
+    script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js';
+    document.head.appendChild(script);
+  }
 }
 
 async function startScanning(mode) {
   AppState.scanningMode = mode;
   
+  document.getElementById('scanner-mode-select').style.display = 'none';
+  document.getElementById('camera-container').style.display = 'block';
+  document.getElementById('scan-result').style.display = 'none';
+  
+  if (mode === 'barcode') {
+    showScannerStatus('scanning', '🔍 Skanowanie w toku...');
+    document.getElementById('ocr-capture-container').style.display = 'none';
+    await startBarcodeDetection();
+  } else if (mode === 'ocr') {
+    showScannerStatus('scanning', '📸 Przygotuj aparat do zrobienia zdjęcia etykiety');
+    document.getElementById('ocr-capture-container').style.display = 'block';
+    await startCamera();
+  }
+}
+
+async function startCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment' }
@@ -417,17 +569,16 @@ async function startScanning(mode) {
     AppState.cameraStream = stream;
     const video = document.getElementById('camera-preview');
     video.srcObject = stream;
-    
-    document.getElementById('scanner-mode-select').style.display = 'none';
-    document.getElementById('camera-container').style.display = 'block';
-    document.getElementById('scan-result').style.display = 'none';
-    
-    if (mode === 'barcode') {
-      startBarcodeDetection();
-    }
   } catch (error) {
-    alert('Nie można uzyskać dostępu do kamery: ' + error.message);
+    showScannerStatus('error', '✗ Nie można uzyskać dostępu do kamery: ' + error.message);
   }
+}
+
+function showScannerStatus(type, message) {
+  const statusEl = document.getElementById('scanner-status');
+  statusEl.className = 'scanner-status ' + type;
+  statusEl.textContent = message;
+  statusEl.style.display = 'block';
 }
 
 function stopCamera() {
@@ -436,40 +587,129 @@ function stopCamera() {
     AppState.cameraStream = null;
   }
   
+  if (html5QrCode) {
+    html5QrCode.stop().catch(() => {});
+    html5QrCode = null;
+  }
+  
+  if (barcodeDetectionInterval) {
+    clearInterval(barcodeDetectionInterval);
+    barcodeDetectionInterval = null;
+  }
+  
   document.getElementById('scanner-mode-select').style.display = 'block';
   document.getElementById('camera-container').style.display = 'none';
+  document.getElementById('scanner-status').style.display = 'none';
+  document.getElementById('ocr-capture-container').style.display = 'none';
 }
 
-function startBarcodeDetection() {
+async function startBarcodeDetection() {
+  if (typeof Html5Qrcode === 'undefined') {
+    showScannerStatus('error', '✗ Biblioteka skanera nie została załadowana. Spróbuj ponownie.');
+    setTimeout(() => {
+      stopCamera();
+    }, 3000);
+    return;
+  }
+  
+  try {
+    html5QrCode = new Html5Qrcode('camera-preview');
+    
+    await html5QrCode.start(
+      { facingMode: 'environment' },
+      {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E,
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39
+        ]
+      },
+      (decodedText) => {
+        showScannerStatus('success', '✓ Kod znaleziony: ' + decodedText);
+        html5QrCode.stop();
+        lookupBarcode(decodedText);
+      },
+      (errorMessage) => {
+        // Scanning in progress - ignore errors
+      }
+    );
+  } catch (error) {
+    showScannerStatus('error', '✗ Błąd uruchamiania skanera: ' + error.message);
+  }
+}
+
+async function captureAndProcessOCR() {
+  if (typeof Tesseract === 'undefined') {
+    showScannerStatus('error', '✗ Biblioteka OCR nie została załadowana');
+    return;
+  }
+  
   const video = document.getElementById('camera-preview');
   const canvas = document.getElementById('scanner-canvas');
   const ctx = canvas.getContext('2d');
   
-  // Note: Barcode Detection API is not widely supported yet
-  // This is a placeholder - in production, you'd use a library like QuaggaJS or html5-qrcode
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0);
   
-  const detectInterval = setInterval(() => {
-    if (!AppState.cameraStream) {
-      clearInterval(detectInterval);
-      return;
+  showScannerStatus('scanning', '🔍 Przetwarzanie obrazu...');
+  
+  try {
+    const result = await Tesseract.recognize(canvas, 'pol+eng', {
+      logger: m => console.log(m)
+    });
+    
+    const text = result.data.text;
+    console.log('OCR result:', text);
+    
+    // Try to extract nutritional data
+    const carbsMatch = text.match(/węglowodany[:\s]*(\d+[.,]?\d*)/i) || 
+                       text.match(/carbohydrat[e]?s?[:\s]*(\d+[.,]?\d*)/i);
+    const proteinMatch = text.match(/białko[:\s]*(\d+[.,]?\d*)/i) ||
+                         text.match(/protein[:\s]*(\d+[.,]?\d*)/i);
+    const fatMatch = text.match(/tłusz[cz]?[e]?[:\s]*(\d+[.,]?\d*)/i) ||
+                     text.match(/fat[:\s]*(\d+[.,]?\d*)/i);
+    const caloriesMatch = text.match(/kalori[e]?[:\s]*(\d+)/i) ||
+                          text.match(/energ[yi][a]?[:\s]*(\d+)/i);
+    
+    if (carbsMatch) {
+      const productData = {
+        name: 'Produkt ze skanowania OCR',
+        carbs: parseFloat(carbsMatch[1].replace(',', '.')),
+        protein: proteinMatch ? parseFloat(proteinMatch[1].replace(',', '.')) : null,
+        fat: fatMatch ? parseFloat(fatMatch[1].replace(',', '.')) : null,
+        calories: caloriesMatch ? parseInt(caloriesMatch[1]) : null,
+        unit: 'g'
+      };
+      
+      showScannerStatus('success', '✓ Znaleziono dane odżywcze!');
+      displayScannedProduct(productData);
+    } else {
+      showScannerStatus('warning', '⚠ Nie znaleziono danych odżywczych. Spróbuj zrobić wyraźniejsze zdjęcie.');
     }
-    
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0);
-    
-    // Simulated barcode detection - would use actual library here
-    // For demo, allow manual EAN input
-  }, 500);
+  } catch (error) {
+    showScannerStatus('error', '✗ Błąd przetwarzania OCR: ' + error.message);
+  }
 }
 
 async function lookupBarcode(ean) {
+  showScannerStatus('scanning', '🔍 Szukanie produktu w bazie...');
+  
   try {
-    const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${ean}.json`);
+    const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${ean}.json`);
     const data = await response.json();
     
     if (data.status === 1) {
       const product = data.product;
+      const unit = product.quantity && product.quantity.toLowerCase().includes('ml') ? 'ml' : 'g';
+      
+      showScannerStatus('success', '✓ Produkt znaleziony: ' + (product.product_name || 'Nieznany'));
+      
       displayScannedProduct({
         name: product.product_name || 'Nieznany produkt',
         ean: ean,
@@ -477,13 +717,15 @@ async function lookupBarcode(ean) {
         protein: parseFloat(product.nutriments?.proteins_100g) || null,
         fat: parseFloat(product.nutriments?.fat_100g) || null,
         calories: parseFloat(product.nutriments?.['energy-kcal_100g']) || null,
-        unit: 'g'
+        unit: unit
       });
     } else {
+      showScannerStatus('warning', '⚠ Kod nie znaleziony w bazie Open Food Facts');
       displayScannedProduct(null);
     }
   } catch (error) {
-    alert('Błąd podczas wyszukiwania produktu: ' + error.message);
+    showScannerStatus('error', '✗ Błąd podczas wyszukiwania produktu: ' + error.message);
+    displayScannedProduct(null);
   }
 }
 
@@ -497,24 +739,25 @@ function displayScannedProduct(productData) {
         <h3>Produkt nie znaleziony</h3>
         <p>Nie znaleziono produktu w bazie. Możesz dodać go ręcznie.</p>
         <button class="btn btn--primary" onclick="openProductForm()">Dodaj ręcznie</button>
-        <button class="btn btn--secondary" onclick="startScanning('barcode')">Skanuj ponownie</button>
+        <button class="btn btn--secondary" onclick="location.reload()">Powrót do skanera</button>
       </div>
     `;
   } else {
+    const escapedData = JSON.stringify(productData).replace(/'/g, "&#39;");
     container.innerHTML = `
       <div class="card">
         <h3>Znaleziono produkt</h3>
         <div class="product-card-info">
           <div class="product-info-item"><strong>Nazwa:</strong> ${productData.name}</div>
-          <div class="product-info-item"><strong>EAN:</strong> ${productData.ean}</div>
-          <div class="product-info-item"><strong>Węglowodany:</strong> ${productData.carbs}g/100g</div>
-          ${productData.protein ? `<div class="product-info-item"><strong>Białko:</strong> ${productData.protein}g/100g</div>` : ''}
-          ${productData.fat ? `<div class="product-info-item"><strong>Tłuszcze:</strong> ${productData.fat}g/100g</div>` : ''}
-          ${productData.calories ? `<div class="product-info-item"><strong>Kalorie:</strong> ${productData.calories}kcal/100g</div>` : ''}
+          ${productData.ean ? `<div class="product-info-item"><strong>EAN:</strong> ${productData.ean}</div>` : ''}
+          <div class="product-info-item"><strong>Węglowodany:</strong> ${productData.carbs}g/100${productData.unit}</div>
+          ${productData.protein ? `<div class="product-info-item"><strong>Białko:</strong> ${productData.protein}g/100${productData.unit}</div>` : ''}
+          ${productData.fat ? `<div class="product-info-item"><strong>Tłuszcze:</strong> ${productData.fat}g/100${productData.unit}</div>` : ''}
+          ${productData.calories ? `<div class="product-info-item"><strong>Kalorie:</strong> ${productData.calories}kcal/100${productData.unit}</div>` : ''}
         </div>
-        <div style="margin-top: var(--space-16); display: flex; gap: var(--space-8);">
-          <button class="btn btn--primary" onclick='addScannedProduct(${JSON.stringify(productData)})'>Dodaj do bazy</button>
-          <button class="btn btn--secondary" onclick="startScanning('barcode')">Skanuj ponownie</button>
+        <div style="margin-top: var(--space-16); display: flex; gap: var(--space-8); flex-direction: column;">
+          <button class="btn btn--primary" onclick='addScannedProduct(${escapedData})'>Dodaj do bazy produktów</button>
+          <button class="btn btn--secondary" onclick="location.reload()">Skanuj kolejny produkt</button>
         </div>
       </div>
     `;
@@ -524,16 +767,31 @@ function displayScannedProduct(productData) {
 }
 
 function addScannedProduct(productData) {
-  AppState.products.push({
-    ...productData,
+  const newProduct = {
     id: generateId(),
+    name: productData.name,
+    ean: productData.ean || '',
+    unit: productData.unit,
+    carbs: productData.carbs,
+    protein: productData.protein,
+    fat: productData.fat,
+    calories: productData.calories,
     category: 'Inne',
+    notes: 'Dodany ze skanera',
     dateAdded: new Date()
-  });
+  };
   
-  alert('Produkt dodany do bazy!');
+  AppState.products.push(newProduct);
+  
+  alert('✓ Produkt "' + productData.name + '" został dodany do bazy!');
+  
+  // Return to scanner selection
   document.getElementById('scan-result').style.display = 'none';
   document.getElementById('scanner-mode-select').style.display = 'block';
+  document.getElementById('scanner-status').style.display = 'none';
+  
+  // Refresh products if on products tab
+  renderProducts();
 }
 
 // GUIDE TAB

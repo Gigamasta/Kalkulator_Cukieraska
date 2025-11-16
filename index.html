@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Alexander Diabetes Manager</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@ericblade/quagga2/dist/quagga.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 </head>
 <body>
     <div id="app">
@@ -180,6 +182,34 @@
                 </div>
             </div>
 
+<!-- Skaner produktu -->
+<div id="scanner-tab" class="tab hidden">
+  <h2>Skaner produktu</h2>
+  <div class="scanner-options">
+    <button id="start-barcode">Skanuj kod kreskowy</button>
+    <button id="upload-label">Zrób zdjęcie etykiety</button>
+  </div>
+  <div id="barcode-video" class="scanner-video"></div>
+  <input type="file" id="label-photo" accept="image/*" style="display:none;">
+  <div id="scanner-status"></div>
+  <div id="product-form-preview" class="hidden">
+    <h3>Podgląd produktu do dodania</h3>
+    <form id="add-product-form">
+      <input type="text" id="prod-name" placeholder="Nazwa produktu*" required>
+      <input type="text" id="prod-cat" placeholder="Kategoria*" required>
+      <input type="text" id="prod-unit" placeholder="Jednostka (g/ml)*" required>
+      <input type="text" id="prod-carb" placeholder="Węglowodany (g)*" required>
+      <input type="text" id="prod-protein" placeholder="Białko (g)">
+      <input type="text" id="prod-fat" placeholder="Tłuszcze (g)">
+      <input type="text" id="prod-cal" placeholder="Kalorie (kcal)">
+      <input type="text" id="prod-ean" placeholder="Kod EAN">
+      <textarea id="prod-note" placeholder="Notatki"></textarea>
+      <button type="submit">Dodaj do bazy produktów</button>
+    </form>
+  </div>
+</div>
+            
+            
             <!-- Guide Tab -->
             <div id="guide" class="tab-pane">
                 <div class="section">

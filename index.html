@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Aleksander">
-    <title>Kalkulator Węglowodanów</title>
+    <meta name="apple-mobile-web-app-title" content="Kalkulacja WW">
+    <title>Kalkulator Węglowodanów - Aleksander</title>
     <style>
         * {
             margin: 0;
@@ -76,12 +76,12 @@
 
         .tab-button {
             flex: 1;
-            min-width: 80px;
-            padding: 12px 8px;
+            min-width: 75px;
+            padding: 10px 6px;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
             color: #666;
             border-bottom: 3px solid transparent;
@@ -119,520 +119,153 @@
             to { opacity: 1; }
         }
 
-        /* === KALKULATOR TAB === */
-        .calculator-section {
+        /* Guide Styles */
+        .guide-section {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .meal-item {
+        .guide-category {
             background: white;
             border: 1px solid #e0e0e0;
             border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            overflow: hidden;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .meal-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .meal-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .meal-details {
-            font-size: 12px;
-            color: #999;
-            margin-top: 2px;
-        }
-
-        .meal-carbs {
+        .category-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 14px;
             font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .category-header:active {
+            opacity: 0.9;
+        }
+
+        .category-icon {
             font-size: 16px;
-            color: #667eea;
-            text-align: right;
             margin-right: 8px;
         }
 
-        .remove-btn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .remove-btn:active {
-            background: #ff5252;
-        }
-
-        /* Add meal section */
-        .add-meal-section {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border: 2px dashed #667eea;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .add-meal-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
+        .category-arrow {
             font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.2s;
+            transition: transform 0.3s;
         }
 
-        .add-meal-btn:active {
-            transform: scale(0.98);
+        .guide-category.expanded .category-arrow {
+            transform: rotate(180deg);
         }
 
-        /* Summary */
-        .summary-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .summary-row.total {
-            border-top: 1px solid rgba(255,255,255,0.3);
-            padding-top: 8px;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .summary-label {
-            opacity: 0.9;
-        }
-
-        .summary-value {
-            font-weight: 600;
-        }
-
-        /* Bolus calculator */
-        .bolus-section {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-        }
-
-        .bolus-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 12px;
-        }
-
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .required {
-            color: #ff6b6b;
-            font-size: 16px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        input[type="number"], input[type="text"], select {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI';
-            background: white;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input[type="number"] {
-            text-align: right;
-        }
-
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .qty-controls {
-            display: flex;
-            gap: 6px;
-        }
-
-        .qty-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .qty-btn:active {
-            background: #764ba2;
-        }
-
-        .bolus-result {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-top: 12px;
-        }
-
-        .bolus-result-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .bolus-result-label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        /* === PRODUKTY TAB === */
-        .products-header {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .search-box {
-            flex: 1;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .filter-dropdown {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 12px;
-            background: white;
-        }
-
-        .sort-dropdown {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 12px;
-            background: white;
-        }
-
-        .products-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .product-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .product-card:active {
-            background: #f8f9fb;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .product-details {
-            flex: 1;
-        }
-
-        .product-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .product-info {
-            font-size: 11px;
-            color: #999;
-            margin-top: 4px;
-        }
-
-        .product-carbs {
-            font-weight: 700;
-            font-size: 14px;
-            color: #667eea;
-            text-align: right;
-            margin-right: 12px;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .edit-btn, .delete-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .edit-btn {
-            color: #667eea;
-        }
-
-        .delete-btn {
-            color: #ff6b6b;
-        }
-
-        .add-product-section {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border: 2px dashed #667eea;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .add-product-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        /* === SKANER TAB === */
-        .scanner-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        #qr-reader {
-            width: 100%;
-            border-radius: 12px;
+        .category-content {
+            max-height: 0;
             overflow: hidden;
-            border: 2px solid #667eea;
+            transition: max-height 0.3s ease;
         }
 
-        .scanner-controls {
-            display: flex;
-            gap: 8px;
+        .guide-category.expanded .category-content {
+            max-height: 2000px;
         }
 
-        .scanner-btn {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .scanner-btn:active {
-            transform: scale(0.98);
-        }
-
-        .start-scanner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .stop-scanner {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .result-display {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            display: none;
-        }
-
-        .result-display.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: flex-end;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            border-radius: 20px 20px 0 0;
-            padding: 24px 16px 16px;
-            max-height: 90vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .modal-header {
-            font-size: 16px;
-            font-weight: 700;
+        .content-body {
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.6;
             color: #333;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
+        .decision-tree {
+            background: #f8f9fb;
+            border-left: 3px solid #667eea;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
         }
 
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .condition {
+            font-weight: 600;
+            color: #667eea;
+            margin: 8px 0 4px 0;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
+        .action {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+            border-left: 2px solid #28a745;
         }
 
-        .form-label {
+        .warning {
+            background: #fff3cd;
+            border-left: 2px solid #ffc107;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .danger {
+            background: #f8d7da;
+            border-left: 2px solid #dc3545;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
             font-size: 12px;
             font-weight: 600;
-            color: #666;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
-        .form-input {
-            padding: 10px 12px;
+        .contact-box {
+            background: #e7f3ff;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 12px;
+        }
+
+        .contact-box strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #667eea;
+        }
+
+        .cheatsheet {
+            background: white;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 12px;
         }
 
-        textarea.form-input {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .form-actions {
+        .cheatsheet-row {
             display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        .btn-primary {
-            flex: 1;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
+        .cheatsheet-row:last-child {
+            border-bottom: none;
+        }
+
+        .cheatsheet-key {
             font-weight: 600;
-            cursor: pointer;
+            color: #667eea;
         }
 
-        .btn-secondary {
-            flex: 1;
-            padding: 12px;
-            background: #f0f0f0;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
+        .cheatsheet-value {
+            text-align: right;
         }
 
-        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -644,130 +277,11 @@
             margin-bottom: 12px;
         }
 
-        .empty-state-text {
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        /* Alert */
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        /* Number pad */
-        .numpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            background: #f0f0f0;
-            padding: 8px;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
-
-        .numpad-btn {
-            padding: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .numpad-btn:active {
-            background: #667eea;
-            color: white;
-        }
-
-        .numpad-delete {
-            grid-column: span 1;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Camera permission info */
-        .camera-info {
-            background: #f0f2ff;
-            border: 1px solid #667eea;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 12px;
-            color: #333;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
         /* Responsive */
         @media (max-width: 600px) {
             .tab-button {
-                font-size: 12px;
-            }
-            
-            .meal-carbs, .product-carbs {
-                font-size: 14px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .products-list {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .modal-content {
-                max-width: 500px;
-                margin: auto;
-                border-radius: 20px;
-                max-height: 80vh;
+                font-size: 10px;
+                min-width: 65px;
             }
         }
     </style>
@@ -785,10 +299,11 @@
             <button class="tab-button active" data-tab="calculator">Kalkulator</button>
             <button class="tab-button" data-tab="products">Produkty</button>
             <button class="tab-button" data-tab="scanner">Skaner</button>
+            <button class="tab-button" data-tab="guide">📖 Poradnik</button>
         </div>
 
         <!-- Content -->
-        <div class="content-area">
+               <div class="content-area">
             <!-- KALKULATOR -->
             <div class="tab-content active" id="calculator">
                 <div class="calculator-section">
@@ -898,6 +413,90 @@
                         <div class="empty-state-icon">📦</div>
                         <div class="empty-state-text">Brak produktów. Dodaj swój pierwszy produkt!</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- SKANER -->
+            <div class="tab-content" id="scanner">
+                <div class="scanner-section">
+                    <div id="camera-info" class="camera-info" style="display: none;"></div>
+                    
+                    <div id="qr-reader"></div>
+
+                    <div class="scanner-controls">
+                        <button class="scanner-btn start-scanner" onclick="startScanner()">📱 Skanuj Kod</button>
+                        <button class="scanner-btn stop-scanner" onclick="stopScanner()" style="display: none;" id="stop-scanner-btn">🛑 Zatrzymaj</button>
+                    </div>
+
+                    <div id="scanner-result" class="result-display">
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label">Kod produktu (EAN)</label>
+                            <input type="text" id="scanned-code" class="form-input" readonly>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label">Nazwa produktu <span class="required">*</span></label>
+                            <input type="text" id="scanned-name" class="form-input" placeholder="Nazwa produktu">
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label">Węglowodany <span class="required">*</span></label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="number" id="scanned-carbs" class="form-input" placeholder="Wartość" inputmode="numeric" step="0.1">
+                                <select id="scanned-unit" class="form-input" style="flex: 0.5;">
+                                    <option value="g">g</option>
+                                    <option value="ml">ml</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label">Kategoria <span class="required">*</span></label>
+                            <select id="scanned-category" class="form-input"></select>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label class="form-label">Notatki</label>
+                            <textarea class="form-input" id="scanned-notes" placeholder="Dodatkowe informacje..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="saveScannedProduct()">Zapisz Produkt</button>
+                            <button class="btn-secondary" onclick="closeScannedProduct()">Anuluj</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal - Dodaj Posiłek -->
+    <div class="modal" id="add-meal-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Dodaj Posiłek</span>
+                <button class="close-btn" onclick="closeAddMealModal()">✕</button>
+            </div>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">Wybierz produkt <span class="required">*</span></label>
+                    <select id="meal-product-select" class="form-input" onchange="updateProductDetails()"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ilość <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <button class="qty-btn" onclick="decrementQty()">−</button>
+                        <input type="number" id="meal-quantity" class="form-input" placeholder="0" inputmode="numeric" step="1" value="100" style="text-align: center;">
+                        <button class="qty-btn" onclick="incrementQty()">+</button>
+                    </div>
+                    <div id="meal-quantity-unit" style="font-size: 12px; color: #999; margin-top: 4px;">100 g</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Węglowodany (wyliczone)</label>
+                    <div style="font-size: 16px; font-weight: 700; color: #667eea; padding: 10px; background: #f0f2ff; border-radius: 8px;" id="meal-carbs-preview">0 g</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notatki</label>
+                    <textarea class="form-input" id="meal-notes" placeholder="Np. bez cukru, ze słodzikiem..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="saveMeal()">Dodaj do Kalkulatora</button>
+                    <button class="btn-secondary" onclick="closeAddMealModal()">Anuluj</button>
                 </div>
             </div>
 

@@ -1907,3 +1907,92 @@ function loadSampleData() {
   
   renderProducts();
 }
+
+// --- Skaner barcode ---
+document.getElementById('start-barcode').onclick = function () {
+  document.getElementById("scanner-status").textContent = "Skanowanie w toku...";
+  Quagga.init({
+    inputStream: {
+      name: "Live",
+      type: "LiveStream",
+      target: document.querySelector('#barcode-video')
+    },
+    decoder: { readers: ["ean_reader"] }
+  }, function(err) {
+    if (err) {
+      document.getElementById("scanner-status").textContent = "✗ Błąd kamery: " + err;
+      return;
+    }
+    Quagga.start();
+  });
+  Quagga.onDetected(function(data) {
+    const code = data.codeResult.code;
+    Quagga.stop();
+    document.getElementById("scanner-status").textContent = "✓ Kod zeskanowany: " + code;
+    // Pobierz dane z Open Food Facts
+    fetch("https://world.openfoodfacts.org/api/v2/product/" + code + ".json")
+      .then(r => r.json())
+      .then(result => {
+        document.getElementById("prod-name").value = result.product.product_name || "";
+        document.getElementById("prod-ean").value = code;
+        document.getElementById("prod-carb").value = result.product.nutriments.carbohydrates_100g || "";
+        document.getElementById("prod-protein").value = result.product.nutriments.proteins_100g || "";
+        document.getElementById("prod-fat").value = result.product.nutriments.fat_100g || "";
+        document.getElementById("prod-cal").value = result.product.nutriments.energy_kcal_100g || "";
+        document.getElementById("product-form-preview").classList.remove("hidden");
+      })
+      .catch(() => {
+        document.getElementById("scanner-status").textContent = "✗ Kod nie znaleziony w bazie. Uzupełnij ręcznie.";
+        document.getElementById("prod-ean").value = code;
+        document.getElementById("product-form-preview").classList.remove("hidden");
+      });
+  });
+};
+
+// -- Skaner etykiet z OCR --
+document.getElementById('upload-label').onclick = function () {
+  document.getElementById('label-photo').click();
+};
+
+document.getElementById('label-photo').onchange = function (e) {
+  document.getElementById("scanner-status").textContent = "Przetwarzanie zdjęcia...";  
+  const file = e.target.files[0];
+  if (!file) return;
+  Tesseract.recognize(file, 'pol', { logger: m => {}})
+    .then(({ data: { text } }) => {
+      document.getElementById("scanner-status").textContent = "✓ Dane wyodrębnione z etykiety";
+      const carb = text.match(/węglowodany\s*[\.:]?\s*(\d+([.,]\d+)?)/i);
+      const protein = text.match(/białko\s*[\.:]?\s*(\d+([.,]\d+)?)/i);
+      const fat = text.match(/tłuszcze\s*[\.:]?\s*(\d+([.,]\d+)?)/i);
+      const cal = text.match(/kcal\s*[\.:]?\s*(\d+([.,]\d+)?)/i);
+      document.getElementById("prod-carb").value = carb?.[1] || "";
+      document.getElementById("prod-protein").value = protein?.[1] || "";
+      document.getElementById("prod-fat").value = fat?.[1] || "";
+      document.getElementById("prod-cal").value = cal?.[1] || "";
+      document.getElementById("product-form-preview").classList.remove("hidden");
+    })
+    .catch(() => {
+      document.getElementById("scanner-status").textContent = "✗ Nie udało się odczytać danych.";
+    });
+};
+
+// -- Dodawanie do IndexedDB (funkcja saveProductToIndexedDB musi już być w app.js aplikacji) --
+document.getElementById("add-product-form").onsubmit = function (e) {
+  e.preventDefault();
+  const product = {
+    id: Date.now(),
+    nazwa: document.getElementById("prod-name").value,
+    kategoria: document.getElementById("prod-cat").value,
+    jednostka: document.getElementById("prod-unit").value,
+    weglowodany: document.getElementById("prod-carb").value,
+    bialko: document.getElementById("prod-protein").value,
+    tluszcze: document.getElementById("prod-fat").value,
+    kalorie: document.getElementById("prod-cal").value,
+    kod_ean: document.getElementById("prod-ean").value,
+    notatki: document.getElementById("prod-note").value,
+    data_dodania: new Date().toISOString()
+  };
+  saveProductToIndexedDB(product);
+  document.getElementById("product-form-preview").classList.add("hidden");
+  document.getElementById("scanner-status").textContent = "✓ Produkt dodany do bazy";
+};

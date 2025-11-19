@@ -2,113 +2,96 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Kalkulacja WW">
-    <title>Kalkulator Węglowodanów - Aleksander</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Bolusa - Aleksander</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            overflow-x: hidden;
-            padding-bottom: env(safe-area-inset-bottom);
+            color: #333;
         }
 
-        html, body, input, textarea, select {
-            -webkit-user-scalable: no;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        input[type="text"], input[type="number"], textarea, select {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background: #ffffff;
-        }
-
-        .app-header {
+        .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 16px 16px env(safe-area-inset-top);
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .app-header h1 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 4px;
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
 
-        .app-header p {
-            font-size: 12px;
+        .header p {
+            font-size: 13px;
             opacity: 0.9;
         }
 
-        .tabs-container {
+        .tabs {
             display: flex;
-            gap: 0;
-            background: #f8f9fb;
-            border-bottom: 1px solid #e0e0e0;
-            flex-shrink: 0;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
             overflow-x: auto;
-            scroll-behavior: smooth;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .tab-button {
+        .tab-btn {
             flex: 1;
-            min-width: 70px;
-            padding: 10px 6px;
-            background: none;
+            padding: 14px 10px;
             border: none;
+            background: none;
             cursor: pointer;
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 12px;
+            font-weight: 600;
             color: #666;
             border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             white-space: nowrap;
+            min-width: 80px;
         }
 
-        .tab-button.active {
+        .tab-btn:hover {
+            background: #f8f9fb;
+        }
+
+        .tab-btn.active {
             color: #667eea;
             border-bottom-color: #667eea;
             background: #f0f2ff;
         }
 
-        .content-area {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .tab-content {
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+            min-height: 60vh;
+        }
+
+        .tab-pane {
             display: none;
-            padding: 16px;
-            min-height: 100%;
-            animation: fadeIn 0.3s ease;
         }
 
-        .tab-content.active {
+        .tab-pane.active {
             display: block;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -116,1761 +99,924 @@
             to { opacity: 1; }
         }
 
-        /* KALKULATOR */
-        .calculator-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .meal-item {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .meal-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .meal-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .meal-details {
-            font-size: 12px;
-            color: #999;
-            margin-top: 2px;
-        }
-
-        .meal-carbs {
-            font-weight: 700;
-            font-size: 16px;
+        h2 {
             color: #667eea;
-            text-align: right;
-            margin-right: 8px;
+            margin-bottom: 16px;
+            font-size: 20px;
         }
 
-        .remove-btn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .remove-btn:active {
-            background: #ff5252;
-        }
-
-        .add-meal-section {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border: 2px dashed #667eea;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .add-meal-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.2s;
-        }
-
-        .add-meal-btn:active {
-            transform: scale(0.98);
-        }
-
-        .summary-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .summary-row.total {
-            border-top: 1px solid rgba(255,255,255,0.3);
-            padding-top: 8px;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .summary-label {
-            opacity: 0.9;
-        }
-
-        .summary-value {
-            font-weight: 600;
-        }
-
-        .bolus-section {
+        .guide-section {
             background: white;
             border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
 
-        .bolus-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 12px;
-        }
-
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .required {
-            color: #ff6b6b;
-            font-size: 16px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        input[type="number"], input[type="text"], select {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI';
-            background: white;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input[type="number"] {
-            text-align: right;
-        }
-
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .qty-controls {
-            display: flex;
-            gap: 6px;
-        }
-
-        .qty-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .qty-btn:active {
-            background: #764ba2;
-        }
-
-        .bolus-result {
+        .guide-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-top: 12px;
-        }
-
-        .bolus-result-value {
-            font-size: 32px;
+            padding: 14px 16px;
             font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .bolus-result-label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        /* PRODUKTY */
-        .products-header {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .search-box {
-            flex: 1;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
             font-size: 14px;
-        }
-
-        .filter-dropdown {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 12px;
-            background: white;
-        }
-
-        .sort-dropdown {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 12px;
-            background: white;
-        }
-
-        .products-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .product-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 12px;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
+            user-select: none;
             transition: all 0.2s;
         }
 
-        .product-card:active {
-            background: #f8f9fb;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        .guide-header:hover {
+            opacity: 0.95;
         }
 
-        .product-details {
-            flex: 1;
-        }
-
-        .product-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .product-info {
-            font-size: 11px;
-            color: #999;
-            margin-top: 4px;
-        }
-
-        .product-carbs {
-            font-weight: 700;
-            font-size: 14px;
-            color: #667eea;
-            text-align: right;
-            margin-right: 12px;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .edit-btn, .delete-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .edit-btn {
-            color: #667eea;
-        }
-
-        .delete-btn {
-            color: #ff6b6b;
-        }
-
-        .add-product-section {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border: 2px dashed #667eea;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .add-product-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        /* SKANER */
-        .scanner-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        #qr-reader {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid #667eea;
-        }
-
-        .scanner-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .scanner-btn {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .scanner-btn:active {
-            transform: scale(0.98);
-        }
-
-        .start-scanner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .stop-scanner {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .result-display {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            display: none;
-        }
-
-        .result-display.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .camera-info {
-            background: #f0f2ff;
-            border: 1px solid #667eea;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 12px;
-            color: #333;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        /* PORADNIK */
-        .guide-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .guide-category {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .category-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 14px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .category-header:active {
-            opacity: 0.9;
-        }
-
-        .category-icon {
-            font-size: 16px;
-            margin-right: 8px;
-        }
-
-        .category-arrow {
-            font-size: 14px;
-            transition: transform 0.3s;
-        }
-
-        .guide-category.expanded .category-arrow {
-            transform: rotate(180deg);
-        }
-
-        .category-content {
+        .guide-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
 
-        .guide-category.expanded .category-content {
-            max-height: 3000px;
+        .guide-section.expanded .guide-content {
+            max-height: 4000px;
         }
 
-        .content-body {
-            padding: 14px;
+        .guide-arrow {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
+        .guide-section.expanded .guide-arrow {
+            transform: rotate(180deg);
+        }
+
+        .guide-body {
+            padding: 16px;
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #333;
         }
 
-        .decision-tree {
-            background: #f8f9fb;
-            border-left: 3px solid #667eea;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 4px;
-        }
-
-        .condition {
-            font-weight: 600;
-            color: #667eea;
-            margin: 8px 0 4px 0;
-        }
-
-        .action {
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-            margin: 4px 0;
-            border-left: 2px solid #28a745;
-        }
-
-        .action ul {
-            margin: 4px 0 0 14px;
-            font-size: 11px;
-        }
-
-        .warning {
-            background: #fff3cd;
-            border-left: 2px solid #ffc107;
-            padding: 8px;
-            margin: 8px 0;
-            border-radius: 4px;
+        .decision-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
             font-size: 12px;
         }
 
-        .danger {
-            background: #f8d7da;
-            border-left: 2px solid #dc3545;
-            padding: 8px;
-            margin: 8px 0;
-            border-radius: 4px;
+        .warning-box {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 4px solid #dc3545;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
+            color: #c41c3b;
         }
 
         .contact-box {
-            background: #e7f3ff;
+            background: #e3f2fd;
             border: 1px solid #667eea;
             border-radius: 8px;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 12px;
+            margin: 10px 0;
             font-size: 12px;
         }
 
         .contact-box strong {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             color: #667eea;
+            font-weight: 700;
         }
 
         .contact-box small {
             display: block;
             margin-top: 4px;
-        }
-
-        .cheatsheet {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 8px 0;
-            font-size: 12px;
-        }
-
-        .cheatsheet-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .cheatsheet-row:last-child {
-            border-bottom: none;
-        }
-
-        .cheatsheet-key {
-            font-weight: 600;
-            color: #667eea;
-        }
-
-        .cheatsheet-value {
-            text-align: right;
-        }
-
-        /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: flex-end;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            border-radius: 20px 20px 0 0;
-            padding: 24px 16px 16px;
-            max-height: 90vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .modal-header {
-            font-size: 16px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-label {
-            font-size: 12px;
-            font-weight: 600;
             color: #666;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
-        .form-input {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
+        ul {
+            margin-left: 18px;
+            font-size: 12px;
         }
 
-        textarea.form-input {
-            min-height: 80px;
-            resize: vertical;
+        li {
+            margin: 6px 0;
+            line-height: 1.6;
         }
 
-        .form-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
+        strong {
+            color: #667eea;
+            font-weight: 700;
         }
 
-        .btn-primary {
-            flex: 1;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-secondary {
-            flex: 1;
-            padding: 12px;
-            background: #f0f0f0;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .empty-state {
+        .placeholder-text {
+            background: #f5f5f5;
+            border: 1px dashed #999;
+            padding: 20px;
             text-align: center;
-            padding: 40px 20px;
             color: #999;
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .empty-state-text {
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        .alert {
-            padding: 12px;
             border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            animation: slideDown 0.3s ease;
         }
 
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
             }
-            to {
-                transform: translateY(0);
-                opacity: 1;
+
+            .tab-btn {
+                font-size: 11px;
+                padding: 10px 6px;
             }
-        }
 
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+            .container {
+                padding: 10px;
+            }
 
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        @media (max-width: 600px) {
-            .tab-button {
-                font-size: 10px;
-                min-width: 65px;
+            .content {
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="app-header">
-            <h1>💉 Kalkulator WW</h1>
-            <p>Aleksander | Cukrzyca Typ 1</p>
-        </div>
+    <div class="header">
+        <h1>💉 Kalkulator Bolusa - Aleksander</h1>
+        <p>Cukrzyca Typ 1 | Urodzony: 11.03.2025</p>
+    </div>
 
-        <div class="tabs-container">
-            <button class="tab-button active" data-tab="calculator">Kalkulator</button>
-            <button class="tab-button" data-tab="products">Produkty</button>
-            <button class="tab-button" data-tab="scanner">Skaner</button>
-            <button class="tab-button" data-tab="guide">📖 Poradnik</button>
-        </div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="calculator">Kalkulator</button>
+        <button class="tab-btn" data-tab="products">Produkty</button>
+        <button class="tab-btn" data-tab="scanner">Skaner</button>
+        <button class="tab-btn" data-tab="guide">📖 Poradnik</button>
+    </div>
 
-        <div class="content-area">
-            <!-- KALKULATOR -->
-            <div class="tab-content active" id="calculator">
-                <div class="calculator-section">
-                    <div class="add-meal-section">
-                        <button class="add-meal-btn" onclick="openAddMealModal()">+ Dodaj Posiłek</button>
-                    </div>
-
-                    <div id="meals-list" class="meals-list">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🍽️</div>
-                            <div class="empty-state-text">Brak posiłków. Dodaj swój pierwszy posiłek!</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-box">
-                        <div class="summary-row">
-                            <span class="summary-label">Razem węglowodanów:</span>
-                            <span class="summary-value" id="total-carbs">0</span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Całkowita energia:</span>
-                            <span class="summary-value" id="total-calories">0 kcal</span>
-                        </div>
-                    </div>
-
-                    <div class="bolus-section">
-                        <div class="bolus-title">⚙️ Kalkulator Bolusa</div>
-
-                        <div class="input-group">
-                            <label class="input-label">
-                                Wskaźnik węglowodanów (Carb Ratio)
-                                <span class="required">*</span>
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" id="carb-ratio" placeholder="np. 12" step="0.5" inputmode="decimal" value="12">
-                                <span style="font-size: 12px; color: #666;">g / j.i.</span>
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">
-                                Obecny poziom glukozy
-                                <span class="required">*</span>
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" id="current-glucose" placeholder="np. 120" step="1" inputmode="numeric" value="100">
-                                <span style="font-size: 12px; color: #666;">mg/dl</span>
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">
-                                Cel poziomu glukozy
-                                <span class="required">*</span>
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" id="target-glucose" placeholder="np. 120" step="1" inputmode="numeric" value="120">
-                                <span style="font-size: 12px; color: #666;">mg/dl</span>
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">
-                                ISF (Insulin Sensitivity Factor)
-                                <span class="required">*</span>
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" id="isf" placeholder="np. 50" step="1" inputmode="numeric" value="50">
-                                <span style="font-size: 12px; color: #666;">mg/dl</span>
-                            </div>
-                        </div>
-
-                        <div id="bolus-result" class="bolus-result" style="display: none;">
-                            <div class="bolus-result-value" id="bolus-value">0</div>
-                            <div class="bolus-result-label">jednostek insuliny</div>
-                        </div>
-
-                        <button class="btn-primary" style="margin-top: 12px;" onclick="calculateBolus()">Oblicz Bolus</button>
-                    </div>
+    <div class="container">
+        <div class="content">
+            <!-- CALCULATOR TAB -->
+            <div class="tab-pane active" id="calculator">
+                <h2>Kalkulator Bolusa</h2>
+                <div class="placeholder-text">
+                    Sekcja Kalkulatora - Tutaj będzie pełna funkcjonalność z Twoim app.js
                 </div>
             </div>
 
-            <!-- PRODUKTY -->
-            <div class="tab-content" id="products">
-                <div class="products-header">
-                    <div class="search-box">
-                        <input type="text" id="search-products" placeholder="Szukaj produktu..." onkeyup="filterProducts()">
-                    </div>
-                    <select id="category-filter" class="filter-dropdown" onchange="filterProducts()">
-                        <option value="">Wszystkie kategorie</option>
-                    </select>
-                    <select id="sort-products" class="sort-dropdown" onchange="sortProducts()">
-                        <option value="date-desc">Najnowsze</option>
-                        <option value="date-asc">Najstarsze</option>
-                        <option value="name-asc">A → Z</option>
-                        <option value="name-desc">Z → A</option>
-                    </select>
-                </div>
-
-                <div class="add-product-section">
-                    <button class="add-product-btn" onclick="openAddProductModal()">+ Dodaj Produkt</button>
-                </div>
-
-                <div id="products-list" class="products-list">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📦</div>
-                        <div class="empty-state-text">Brak produktów. Dodaj swój pierwszy produkt!</div>
-                    </div>
+            <!-- PRODUCTS TAB -->
+            <div class="tab-pane" id="products">
+                <h2>Baza Produktów</h2>
+                <div class="placeholder-text">
+                    Sekcja Produktów - Tutaj będzie baza produktów z Twojego app.js
                 </div>
             </div>
 
-            <!-- SKANER -->
-            <div class="tab-content" id="scanner">
-                <div class="scanner-section">
-                    <div id="camera-info" class="camera-info" style="display: none;"></div>
-                    
-                    <div id="qr-reader"></div>
+            <!-- SCANNER TAB -->
+            <div class="tab-pane" id="scanner">
+                <h2>Skaner Kodów Kreskowych</h2>
+                <div class="placeholder-text">
+                    Sekcja Skanera - Tutaj będzie skanowanie kodów z Twojego app.js
+                </div>
+            </div>
 
-                    <div class="scanner-controls">
-                        <button class="scanner-btn start-scanner" onclick="startScanner()">📱 Skanuj Kod</button>
-                        <button class="scanner-btn stop-scanner" onclick="stopScanner()" style="display: none;" id="stop-scanner-btn">🛑 Zatrzymaj</button>
+            <!-- GUIDE TAB - PEŁNY PORADNIK Z POPRAWKAMI -->
+            <div class="tab-pane" id="guide">
+                <h2>📖 Poradnik Cukrzycy Typu 1 - Aleksander</h2>
+
+                <!-- 1. KONTAKT Z ZESPOŁEM MEDYCZNYM -->
+                <div class="guide-section expanded">
+                    <div class="guide-header">
+                        <span>📞 Kontakt Z Zespołem Medycznym</span>
+                        <span class="guide-arrow">▼</span>
                     </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="contact-box">
+                                <strong>🚨 POGOTOWIE RATUNKOWE</strong>
+                                <strong style="font-size: 18px; color: red;">999 lub 112</strong>
+                                <small><strong>Dzwoń NATYCHMIAST jeśli:</strong></small>
+                                <ul style="margin-top: 6px;">
+                                    <li>Aleksander jest nieprzytomny lub ma zaburzenia świadomości</li>
+                                    <li>Drgawki lub konwulsje</li>
+                                    <li>Ciężki, przyśpieszony oddech (Kussmaula)</li>
+                                    <li>Zapach acetonu z ust</li>
+                                    <li>Nasilone wymioty trwające ponad 2 godziny</li>
+                                    <li>Ból brzucha z wysoką glukozą &gt;250 mg/dl</li>
+                                    <li>Tachykardia (szybkie bicie serca) &gt;150 bpm</li>
+                                </ul>
+                            </div>
 
-                    <div id="scanner-result" class="result-display">
-                        <div style="margin-bottom: 12px;">
-                            <label class="form-label">Kod produktu (EAN)</label>
-                            <input type="text" id="scanned-code" class="form-input" readonly>
-                        </div>
-                        <div style="margin-bottom: 12px;">
-                            <label class="form-label">Nazwa produktu <span class="required">*</span></label>
-                            <input type="text" id="scanned-name" class="form-input" placeholder="Nazwa produktu">
-                        </div>
-                        <div style="margin-bottom: 12px;">
-                            <label class="form-label">Węglowodany <span class="required">*</span></label>
-                            <div style="display: flex; gap: 8px;">
-                                <input type="number" id="scanned-carbs" class="form-input" placeholder="Wartość" inputmode="numeric" step="0.1">
-                                <select id="scanned-unit" class="form-input" style="flex: 0.5;">
-                                    <option value="g">g</option>
-                                    <option value="ml">ml</option>
-                                </select>
+                            <div class="contact-box">
+                                <strong>👨‍⚕️ Pediatra Diabetolog (dzisiaj/natychmiast)</strong>
+                                <small>Nr: ___________________________</small>
+                            </div>
+
+                            <div class="contact-box">
+                                <strong>🏥 Poradnia Diabetologiczna (szpital)</strong>
+                                <small>Nr: ___________________________</small>
+                            </div>
+
+                            <div class="contact-box">
+                                <strong>🔧 Serwis Pompy Insulinowej</strong>
+                                <small>Nr: ___________________________</small>
+                            </div>
+
+                            <div class="warning-box">
+                                ⚠️ <strong>ZAPISZ WSZYSTKIE NUMERY!</strong> Miej je dostępne nawet bez internetu. Nie polegaj tylko na telefonie!
                             </div>
                         </div>
-                        <div style="margin-bottom: 12px;">
-                            <label class="form-label">Kategoria <span class="required">*</span></label>
-                            <select id="scanned-category" class="form-input"></select>
-                        </div>
-                        <div style="margin-bottom: 12px;">
-                            <label class="form-label">Notatki</label>
-                            <textarea class="form-input" id="scanned-notes" placeholder="Dodatkowe informacje..."></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button class="btn-primary" onclick="saveScannedProduct()">Zapisz Produkt</button>
-                            <button class="btn-secondary" onclick="closeScannedProduct()">Anuluj</button>
-                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- PORADNIK -->
-            <div class="tab-content" id="guide">
+                <!-- 2. SZYBKA ŚCIĄGA -->
                 <div class="guide-section">
-                    <!-- EMERGENCY CONTACTS -->
-                    <div class="guide-category expanded">
-                        <div class="category-header">
-                            <span><span class="category-icon">📞</span>Kontakt Z Zespołem Medycznym</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <div class="contact-box">
-                                    <strong>🚨 POGOTOWIE RATUNKOWE</strong>
-                                    <strong style="color: red;">999</strong>
-                                    <small>Wywołaj natychmiast jeśli:</small>
-                                    <ul style="margin-top: 4px; margin-left: 14px;">
-                                        <li>Aleksander jest nieprzytomny</li>
-                                        <li>Drgawki lub zaburzenia świadomości</li>
-                                        <li>Ciężki oddech (Kussmaula)</li>
-                                        <li>Zapach acetonu z ust</li>
-                                        <li>Nasilone wymioty</li>
-                                    </ul>
-                                </div>
+                    <div class="guide-header">
+                        <span>⚡ Szybka Ściąga</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <strong>Poziomy Glukozy (mg/dl):</strong>
+                            <ul style="margin-top: 8px;">
+                                <li><strong>&lt;55:</strong> 🔴 CIĘŻKA HIPOGLIKEMIA - WEZWIJ 999!</li>
+                                <li><strong>55-70:</strong> 🟠 Umiarkowana hipoglikemia - Szybkie WW</li>
+                                <li><strong>70-100:</strong> 🟢 Norma (prawidłowy zakres)</li>
+                                <li><strong>100-150:</strong> 🟢 Norma (ponad docelowa)</li>
+                                <li><strong>150-200:</strong> 🟡 Wznosząca się hiperglikemia</li>
+                                <li><strong>200-250:</strong> 🟡 Wyraźna hiperglikemia</li>
+                                <li><strong>&gt;250:</strong> 🔴 Poważna hiperglikemia - Mierz ketony!</li>
+                                <li><strong>&gt;350 z ketonami:</strong> 🔴 PODEJRZENIE DKA - WEZWIJ 999!</li>
+                            </ul>
 
-                                <div class="contact-box">
-                                    <strong>👨‍⚕️ Lekarz Diabetolog (dzisiaj)</strong>
-                                    <small>Nr telefonicny: _____________</small>
-                                </div>
+                            <strong style="display: block; margin-top: 12px;">Przy Hipoglikemii (&lt;70 mg/dl):</strong>
+                            <ul style="margin-top: 6px;">
+                                <li>Podaj 4-5g szybkich węglowodanów (sok, cukier)</li>
+                                <li>Czekaj 15 minut</li>
+                                <li>Zmierz ponownie</li>
+                                <li>Powtarzaj jeśli &lt;70 mg/dl</li>
+                            </ul>
 
-                                <div class="contact-box">
-                                    <strong>🏥 Poradnia Diabetologiczna</strong>
-                                    <small>Nr telefonicny: _____________</small>
-                                </div>
-
-                                <div class="contact-box">
-                                    <strong>🔧 Serwis Pompy Insulinowej</strong>
-                                    <small>Nr telefonicny: _____________</small>
-                                </div>
-
-                                <div class="warning">
-                                    ⚠️ <strong>Zawsze miej pod ręką zapisane wszystkie numery!</strong> Nie polegaj tylko na telefonie - mogą się rozładować baterie lub brak sieci.
-                                </div>
-                            </div>
+                            <strong style="display: block; margin-top: 12px;">Obliczenia Bolusa:</strong>
+                            <ul style="margin-top: 6px;">
+                                <li><strong>Bolus = (WW ÷ ICR) + (Glukoza - Cel) ÷ ISF</strong></li>
+                                <li>Bolus nigdy nie może być ujemny - minimum 0 j.i.</li>
+                                <li>Zaokrąglij do 0.5 j.i. (co 0.5)</li>
+                            </ul>
                         </div>
                     </div>
+                </div>
 
-                    <!-- CHEAT SHEET -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">⚡</span>Szybka Ściąga</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <strong style="color: #667eea;">Poziomy Glukozy (mg/dl):</strong>
-                                <div class="cheatsheet">
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">&lt;55</span>
-                                        <span class="cheatsheet-value">🔴 HIPOGLIKEMIA - Ratuj!</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">55-70</span>
-                                        <span class="cheatsheet-value">🟠 Niżka - Obserwuj</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">70-150</span>
-                                        <span class="cheatsheet-value">🟢 NORMA</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">150-200</span>
-                                        <span class="cheatsheet-value">🟡 Wysoka</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">&gt;250</span>
-                                        <span class="cheatsheet-value">🔴 Bardzo wysoka</span>
-                                    </div>
-                                </div>
-
-                                <strong style="color: #667eea; margin-top: 12px; display: block;">Obliczenia Bolusa:</strong>
-                                <div class="cheatsheet">
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">ICR (Carb Ratio)</span>
-                                        <span class="cheatsheet-value">1 j.i. : ?? g WW</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">ISF</span>
-                                        <span class="cheatsheet-value">1 j.i. zniża o ?? mg/dl</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">Cel glukozy</span>
-                                        <span class="cheatsheet-value">?? mg/dl</span>
-                                    </div>
-                                </div>
-
-                                <strong style="color: #667eea; margin-top: 12px; display: block;">Przy Hipoglikemii (&lt;70):</strong>
-                                <div class="cheatsheet">
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">Szybkie WW</span>
-                                        <span class="cheatsheet-value">4-5g (sok, cukier)</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">Czekaj</span>
-                                        <span class="cheatsheet-value">15 minut</span>
-                                    </div>
-                                    <div class="cheatsheet-row">
-                                        <span class="cheatsheet-key">Zmierz ponownie</span>
-                                        <span class="cheatsheet-value">Glukometr</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- 3. NISKA GLUKOZA - POMPA -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🔴 Niska Glukoza (Pompa) - &lt;70 mg/dl</span>
+                        <span class="guide-arrow">▼</span>
                     </div>
-
-                    <!-- NISKA GLUKOZA - POMPA -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">🔴</span>Niska Glukoza (Pompa)</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli Aleksander ma glukozę &lt;70 mg/dl:</div>
-                                    <div class="action">1️⃣ <strong>Zmierz ponownie</strong> - upewnij się (mogą być błędy pomiaru)</div>
-                                    <div class="action">2️⃣ <strong>Podaj szybkie węglowodany:</strong> 4-5g
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Sok 100ml</li>
-                                            <li>Napój z cukrem</li>
-                                            <li>Tabletka glukozy (Dextro)</li>
-                                            <li>Miód (1 łyżeczka)</li>
-                                        </ul>
-                                    </div>
-                                    <div class="action">3️⃣ <strong>Czekaj 15 minut</strong> - pozwól węglowodanom się zaabsorbować</div>
-                                    <div class="action">4️⃣ <strong>Zmierz ponownie:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>ℹ️ Jeśli Aleksander ma &lt;70 mg/dl:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ Zmierz PONOWNIE (mogą być błędy pomiaru)</li>
+                                    <li>2️⃣ Podaj 4-5g szybkich WW: sok, miód, cukier, tabletka glukozy</li>
+                                    <li>3️⃣ Czekaj 15 minut na wchłonięcie</li>
+                                    <li>4️⃣ Zmierz ponownie:
+                                        <ul style="margin-top: 4px;">
                                             <li>Jeśli &gt;100: OK, koniec</li>
+                                            <li>Jeśli 70-100: OK ale obserwuj</li>
                                             <li>Jeśli &lt;70: Powtórz kroki 2-4</li>
-                                            <li>Jeśli dalej pada: Wezwij 999</li>
+                                            <li>Jeśli nadal pada: Wezwij 999</li>
                                         </ul>
-                                    </div>
-                                </div>
+                                    </li>
+                                </ul>
+                            </div>
 
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli Aleksander jest NIEPRZYTOMNY:</div>
-                                    <div class="danger">🚨 WEZWIJ 999 NATYCHMIAST!</div>
-                                    <div class="action">• Nie podawaj nic przez usta</div>
-                                    <div class="action">• Podaj glukagon (jeśli posiadasz)</div>
-                                    <div class="action">• Połóż w pozycji bocznej bezpiecznej</div>
-                                    <div class="action">• Sprawdzaj oddech do przybycia pogotowia</div>
-                                </div>
+                            <div class="danger-box">
+                                🚨 <strong>JEŚLI ALEKSANDER JEST NIEPRZYTOMNY:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>WEZWIJ 999 NATYCHMIAST!</li>
+                                    <li>Nie podawaj nic przez usta</li>
+                                    <li>Podaj glukagon (jeśli masz i umiesz)</li>
+                                    <li>Połóż w pozycji bocznej bezpiecznej</li>
+                                    <li>Sprawdzaj oddech do przybycia pogotowia</li>
+                                </ul>
+                            </div>
 
-                                <div class="warning">
-                                    ⚠️ <strong>NIGDY nie suspenduuj pompy</strong> w obawie o hipoglikemię. Może to prowadzić do hiperglikemii i kwasicy!
-                                </div>
+                            <div class="warning-box">
+                                ⚠️ <strong>NIGDY nie suspenduj pompy!</strong> Może to prowadzić do hiperglikemii i DKA w ciągu godzin!
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- WYSOKA GLUKOZA - POMPA -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">🟡</span>Wysoka Glukoza (Pompa)</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli Aleksander ma glukozę 150-250 mg/dl:</div>
-                                    <div class="action">1️⃣ <strong>Zmierz ketony</strong> - paski ketonowe w moczu lub krwi</div>
-                                    <div class="action">2️⃣ <strong>Jeśli BRAK ketonów:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Podaj korekcyjną insulinę (z pompy lub pena)</li>
-                                            <li>Daj pić dużo wody</li>
+                <!-- 4. WYSOKA GLUKOZA - POMPA -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🟡 Wysoka Glukoza (Pompa) - &gt;150 mg/dl</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>ℹ️ Glukoza 150-250 mg/dl (bez ketonów):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ Zmierz ketony (paski ketonowe)</li>
+                                    <li>2️⃣ Nie ma ketonów:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Podaj korekcyjną insulinę (z pompy)</li>
+                                            <li>Daj pić wodę (500 ml)</li>
                                             <li>Czekaj 2-3 godziny</li>
                                             <li>Zmierz ponownie</li>
                                         </ul>
-                                    </div>
-                                    <div class="action">3️⃣ <strong>Jeśli ŚLADY ketonów:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Zwiększ insulinę na 10-20% dawki dobowej</li>
+                                    </li>
+                                    <li>3️⃣ Są ślady ketonów (&lt;0.5 mmol/L):
+                                        <ul style="margin-top: 4px;">
+                                            <li>Zwiększ insulinę o 10% dawki dobowej</li>
                                             <li>Podaj z pena (nie z pompy!)</li>
-                                            <li>Daj wodę z cytryną</li>
+                                            <li>Daj wodę z cytryna</li>
                                             <li>Zmierz ketony za 2h</li>
                                         </ul>
-                                    </div>
-                                </div>
+                                    </li>
+                                </ul>
+                            </div>
 
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli Aleksander ma glukozę &gt;250 mg/dl PLUS ketony:</div>
-                                    <div class="danger">🚨 PODEJRZENIE DKA - WEZWIJ 999!</div>
-                                    <div class="action">• Objawy: wymioty, ból brzucha, oddech przyspieszony</div>
-                                    <div class="action">• Zapach acetonu z ust</div>
-                                    <div class="action">• TO STAN ZAGRAŻAJĄCY ŻYCIU</div>
-                                </div>
+                            <div class="danger-box">
+                                🚨 <strong>Glukoza &gt;250 mg/dl LUB ketony &gt;0.5 mmol/L:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>PODEJRZENIE DKA (Kwasica Ketonowa)</li>
+                                    <li>WEZWIJ 999!</li>
+                                    <li>Objawy: wymioty, ból brzucha, oddech przyspieszony, zapach acetonu</li>
+                                    <li>TO STAN ZAGRAŻAJĄCY ŻYCIU!</li>
+                                </ul>
+                            </div>
+
+                            <div class="warning-box">
+                                ⚠️ DKA może rozwinąć się w ciągu 4-12 godzin! Bądź czujny!
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- AWARIA POMPY -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">🔧</span>Awaria Pompy</span>
-                            <span class="category-arrow">▼</span>
+                <!-- 5. NISKA GLUKOZA - PENY -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🔴 Niska Glukoza (Peny) - &lt;70 mg/dl</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="warning-box">
+                                ⚠️ <strong>PAMIĘTAJ:</strong> Z penami insuliny, insulina bazowa jest pod skórą. Nie możesz jej zawiesić jak w pompie!
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Postępowanie prawie identyczne jak z pompą:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ Zmierz ponownie (upewnij się)</li>
+                                    <li>2️⃣ Podaj 4-5g szybkich WW</li>
+                                    <li>3️⃣ Czekaj 15 minut</li>
+                                    <li>4️⃣ Zmierz ponownie</li>
+                                    <li>5️⃣ Jeśli &lt;70: Powtórz kroki 2-4</li>
+                                    <li>6️⃣ Jeśli nadal pada: Wezwij 999</li>
+                                </ul>
+                            </div>
+
+                            <div class="danger-box">
+                                🚨 <strong>Przy nieprzytomności - DOKŁADNIE JAK Z POMPĄ:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>WEZWIJ 999</li>
+                                    <li>Nie podawaj nic przez usta</li>
+                                    <li>Podaj glukagon</li>
+                                    <li>Pozycja boczna bezpieczna</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli pompa wyświetla ALARM:</div>
-                                    <div class="action">1️⃣ <strong>Przeczytaj kod alarmu</strong> w podręczniku pompy</div>
-                                    <div class="action">2️⃣ <strong>Spróbuj rozwiązać:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                    </div>
+                </div>
+
+                <!-- 6. WYSOKA GLUKOZA - PENY -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🟡 Wysoka Glukoza (Peny) - &gt;150 mg/dl</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>Glukoza 150-250 mg/dl (bez ketonów):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ Zmierz ketony</li>
+                                    <li>2️⃣ Nie ma ketonów:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Podaj korekcyjną insulinę penem</li>
+                                            <li>Daj pić wodę (500 ml)</li>
+                                            <li>Czekaj 2-3 godziny</li>
+                                            <li>Zmierz ponownie</li>
+                                        </ul>
+                                    </li>
+                                    <li>3️⃣ Są ślady ketonów:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Zwiększ insulinę o 10-20%</li>
+                                            <li>Podaj penem (dokładnie jak posiłkowy bolus)</li>
+                                            <li>Daj wodę z cytryna</li>
+                                            <li>Zmierz ketony za 2h</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="danger-box">
+                                🚨 <strong>Glukoza &gt;250 LUB ketony &gt;0.5 mmol/L:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>WEZWIJ 999!</li>
+                                    <li>Podejrzenie DKA</li>
+                                    <li>To STAN ZAGRAŻAJĄCY ŻYCIU</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. AWARIA POMPY -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🔧 Awaria Pompy</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>Jeśli pompa wyświetla ALARM:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ Przeczytaj kod alarmu (instrukcja pompy)</li>
+                                    <li>2️⃣ Spróbuj rozwiązać:
+                                        <ul style="margin-top: 4px;">
                                             <li>Sprawdź baterię</li>
                                             <li>Sprawdź pojemnik (czy insulina się nie skończyła)</li>
-                                            <li>Sprawdź zestaw infuzyjny (czy nie wycieka)</li>
+                                            <li>Sprawdź wkłucie (czy nie wycieka insulina)</li>
                                             <li>Zrestartuj pompę (wg instrukcji)</li>
                                         </ul>
-                                    </div>
-                                    <div class="action">3️⃣ <strong>Jeśli to nie pomogło:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Wezwij producenta pompy (masz numer?)</li>
+                                    </li>
+                                    <li>3️⃣ Jeśli nie pomogło:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Wezwij producenta pompy</li>
                                             <li>Przygotuj się na przejście na peny</li>
                                         </ul>
-                                    </div>
-                                </div>
+                                    </li>
+                                </ul>
+                            </div>
 
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli pompa się całkowicie zepsuje:</div>
-                                    <div class="action">1️⃣ <strong>NATYCHMIAST przejdź na peny!</strong></div>
-                                    <div class="action">2️⃣ <strong>Zwiększ insulinę o 20-30%:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Baza (insulina długo działająca) o 20-30%</li>
-                                            <li>Bolus do posiłków o 20-30%</li>
+                            <div class="danger-box">
+                                🚨 <strong>JEŚLI POMPA SIĘ CAŁKOWICIE ZEPSUJE:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ NATYCHMIAST przejdź na peny!</li>
+                                    <li>2️⃣ Zwiększ insulinę o 20-30%:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Baza (długodziałająca) + 20-30%</li>
+                                            <li>Bolus (posiłkowy) + 20-30%</li>
                                         </ul>
-                                    </div>
-                                    <div class="action">3️⃣ <strong>Zmierz glukozę co 2-3 godziny</strong></div>
-                                    <div class="action">4️⃣ <strong>Monitoruj ketony</strong> - ryzyko DKA!</div>
-                                    <div class="action">5️⃣ <strong>Skontaktuj się z diabetologiem</strong> - zmiana schematu</div>
-                                </div>
+                                    </li>
+                                    <li>3️⃣ Mierz glukozę co 2-3 godziny</li>
+                                    <li>4️⃣ Monitoruj ketony (WYSOKIE RYZYKO DKA!)</li>
+                                    <li>5️⃣ Skontaktuj się z diabetologiem</li>
+                                </ul>
+                            </div>
 
-                                <div class="warning">
-                                    ⚠️ <strong>Zawsze miej w lodówce zapasową fiolkę insuliny bazowej!</strong> Na wypadek awarii pompy.
-                                </div>
+                            <div class="warning-box">
+                                ⚠️ <strong>ZAWSZE miej w lodówce zapasową fiolkę insuliny bazowej!</strong> Na wypadek awarii pompy.
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- INFEKCJA/CHOROBA -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">🤒</span>Infekcja / Choroba</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <div class="decision-tree">
-                                    <div class="condition">ℹ️ Jeśli Aleksander zachoruje (gorączka, kaszl, biegunka):</div>
-                                    <div class="action">1️⃣ <strong>ZAWSZE PODAWAJ INSULINĘ!</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>NIGDY nie przerywaj insuliny, nawet jeśli nie je</li>
-                                            <li>Organizm potrzebuje insuliny do walki z infekcją</li>
-                                        </ul>
-                                    </div>
-                                    <div class="action">2️⃣ <strong>Zmierz glukozę częściej:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                <!-- 8. INFEKCJA/CHOROBA -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🤒 Infekcja / Choroba</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="danger-box">
+                                🚨 <strong>PAMIĘTAJ: ZAWSZE PODAWAJ INSULINĘ!</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>NIGDY nie przerywaj insuliny, nawet jeśli Aleksander nie je!</li>
+                                    <li>Organizm potrzebuje insuliny do walki z infekcją</li>
+                                    <li>Brak insuliny = DKA w godzinach!</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Jeśli Aleksander ma gorączkę, kaszel, biegunkę:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ Mierz glukozę CZĘŚCIEJ:
+                                        <ul style="margin-top: 4px;">
                                             <li>Co 2-4 godziny (zamiast 3-4x dziennie)</li>
-                                            <li>Prowadź dziennik pomiarów</li>
+                                            <li>Prowadź dokładny dziennik</li>
                                         </ul>
-                                    </div>
-                                    <div class="action">3️⃣ <strong>Zwykle glukoza ROŚNIE przy infekcji:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Zwiększ insulinę o 10-50% (zależy od zapatrywania)</li>
-                                            <li>Skonsultuj się z diabetologiem</li>
+                                    </li>
+                                    <li>2️⃣ Glukoza zwykle ROŚNIE przy infekcji:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Zwiększ insulinę o 10-50% (zależy od wzrostu)</li>
+                                            <li>Konsultuj się z diabetologiem</li>
                                         </ul>
-                                    </div>
-                                    <div class="action">4️⃣ <strong>Dbaj o nawodnienie:</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Dużo napojów (woda, czaj)</li>
-                                            <li>Czasem słabsza herbacie ze cukrem</li>
+                                    </li>
+                                    <li>3️⃣ Dbaj o nawodnienie:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Dużo wody (bez cukru)</li>
+                                            <li>Czasem herbata ze cukrem lub sokiem</li>
                                         </ul>
-                                    </div>
-                                    <div class="action">5️⃣ <strong>Monitoruj ketony (bardzo ważne!):</strong>
-                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
-                                            <li>Jeśli ketony pojawiają się, ryzyko DKA</li>
+                                    </li>
+                                    <li>4️⃣ Monitoruj ketony BARDZO UWAŻNIE:
+                                        <ul style="margin-top: 4px;">
+                                            <li>Jeśli ketony pojawiają się = ryzyko DKA</li>
                                             <li>Bądź gotowy na szpital</li>
                                         </ul>
-                                    </div>
-                                </div>
+                                    </li>
+                                </ul>
+                            </div>
 
-                                <div class="warning">
-                                    ⚠️ <strong>OSTRZEŻENIE:</strong> Kwasica ketonowa (DKA) BARDZO często pojawia się przy infekcji. Bądź czujny na objawy!
-                                </div>
+                            <div class="warning-box">
+                                ⚠️ DKA BARDZO CZĘSTO pojawia się przy infekcji! Bądź bardzo czujny!
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- PODSTAWOWE ZASADY -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">📋</span>Podstawowe Zasady</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
-                                <strong>1. ZAWSZE Podawaj Insulinę</strong>
-                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
-                                    <li>Brak insuliny = Kwasica ketonowa w ciągu godzin</li>
-                                    <li>Nawet jeśli Aleksander nie je</li>
-                                    <li>Nawet jeśli ma hipoglikemię (najpierw leczysz hipoglikemię, potem insulina)</li>
+                <!-- 9. PODJADANIE -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🍪 Podjadanie i Przekąski</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>Przekąski BEZ insuliny (&lt;10g WW):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Sery twardsze, masło orzechowe, jaja</li>
+                                    <li>Warzywa: marchewka, selery, ogórek</li>
+                                    <li>Mieszanka śladowych węglowodanów</li>
+                                    <li>Nie trzeba liczyć, nie trzeba bolusa</li>
                                 </ul>
+                            </div>
 
+                            <div class="decision-box">
+                                <strong>Przekąski Z LEKKĄ insuliną (10-15g WW):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Jogurt, mleko, owoce</li>
+                                    <li>Chleb pełnoziarnisty z maśłem</li>
+                                    <li>Gazetki zbożowe z mlekiem</li>
+                                    <li>Trzeba obliczyć WW, ale czasem mały bolus wystarczy</li>
+                                </ul>
+                            </div>
+
+                            <div class="warning-box">
+                                ⚠️ Przekąski są OK! Nie ma zakazów! Trzeba tylko obliczyć WW i podać insulinę!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. ŚWIĘTA I WYJAZDY -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🎄 Święta i Wyjazdy</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="warning-box">
+                                ⚠️ Święta to NORMALNY CZAS dla Aleksandra! Baw się razem z innymi dziecikami! Trzeba tylko myśleć o cukrzycą!
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Pakowanie (PODWÓJNE ilości!):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Insulina (x2 zapasy) + lodówka przenośna</li>
+                                    <li>Glukometr + paski (x2 zapasy)</li>
+                                    <li>Ketony (urinalne lub krwi) - x2</li>
+                                    <li>Glukagon + instrukcja</li>
+                                    <li>Szybkie węglowodany (3x potrzebna ilość)</li>
+                                    <li>Przepisy na insulinę od lekarza (na wypadek bezrobocia)</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Podróż NA ZACHÓD (dzień się wydłuża):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Idziesz do przodu w czasie</li>
+                                    <li>Dzień jest dłuższy = więcej czasu na insulinę</li>
+                                    <li>Czasem trzeba ZMNIEJSZYĆ insulinę</li>
+                                    <li>Mierz glukozę co 4 godziny</li>
+                                    <li>Skonsultuj plan z lekarzem PRZED wyjazdem</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Podróż NA WSCHÓD (dzień się skraca):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Idziesz do tyłu w czasie</li>
+                                    <li>Dzień jest krótszy = mniej czasu na insulinę</li>
+                                    <li>Czasem trzeba ZWIĘKSZYĆ insulinę</li>
+                                    <li>Mierz glukozę co 4 godziny</li>
+                                    <li>Skonsultuj plan z lekarzem PRZED wyjazdem</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. SZKOŁA I WAKACJE -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🎒 Szkoła i Wakacje</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>Spotkanie z nauczycielami i opiekunami:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Wyjaśnij co to cukrzyca (proste słowa)</li>
+                                    <li>Nauczaj objawy hipoglikemii</li>
+                                    <li>Podaj numer do Ciebie (zawsze dostępny)</li>
+                                    <li>Wyjaśnij procedurę przy kryzyste</li>
+                                    <li>Daj instrukcję wstrzykiwania glukagonu</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Wyposażenie w szkole (pozostaw tam):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Szybkie węglowodany (sok, cukier)</li>
+                                    <li>Glukometr + paski + lancety</li>
+                                    <li>Glukagon (jedna fiolka)</li>
+                                    <li>Przepisy lekarskie (na wypadek trzeba zmienić)</li>
+                                    <li>Numer do rodziców na kartce</li>
+                                </ul>
+                            </div>
+
+                            <div class="warning-box">
+                                ⚠️ Aleksander MOŻE być normalnym dzieckiem w szkole! Cukrzyca to nie niepełnosprawność!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 12. SYTUACJE KRYTYCZNE -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🚨 Sytuacje Krytyczne - Kiedy Wezywać 999</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="danger-box">
+                                <strong>DZWOŃ 999 LUB 112 JEŚli:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>🔴 Glikemia &lt;40 mg/dl (bez względu na objawy)</li>
+                                    <li>🔴 Glikemia &gt;400 mg/dl + ketony (DKA)</li>
+                                    <li>🔴 Aleksander jest NIEPRZYTOMNY</li>
+                                    <li>🔴 Ma drgawki lub konwulsje</li>
+                                    <li>🔴 Ciężki oddech (Kussmaula) + wysoka glukoza</li>
+                                    <li>🔴 Zapach acetonu + nudności + wymioty</li>
+                                    <li>🔴 Traciąc przytomność podczas hipoglikemii</li>
+                                    <li>🔴 Nie wspłycha się po podaniu węglowodanów w 15 minut</li>
+                                    <li>🔴 Zaburzenia mowy, poparcia, dezorientacja</li>
+                                    <li>🔴 Udar (podejrzenie)</li>
+                                    <li>🔴 Ból piersi lub brak powietrza</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Postępowanie przy hipoglikemii z utratem przytomności:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ WEZWIJ 999</li>
+                                    <li>2️⃣ Podaj glukagon (jeśli umiesz)</li>
+                                    <li>3️⃣ Połóż w pozycji bocznej bezpiecznej</li>
+                                    <li>4️⃣ Zanotuj godzinę utraty przytomności</li>
+                                    <li>5️⃣ Nie opuszczaj Aleksandra bez opieki</li>
+                                    <li>6️⃣ Monitoruj oddech do przybycia pogotowia</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Postępowanie przy podejrzeniu DKA:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>1️⃣ WEZWIJ 999 NATYCHMIAST</li>
+                                    <li>2️⃣ Zanotuj wszystkie objawy</li>
+                                    <li>3️⃣ Zmierz glukozę i ketony (powiedz dyspozytorowi)</li>
+                                    <li>4️⃣ NIE jedzenia ani picia</li>
+                                    <li>5️⃣ Przygotuj dokumenty medyczne na wyjazd do szpitala</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 13. DOBRE PRAKTYKI -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>✅ Dobre Praktyki</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
+                                <strong>1. ZAWSZE Podawaj Insulinę</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Brak insuliny = Kwasica ketonowa w godzinach</li>
+                                    <li>Nawet jeśli Aleksander nie je (choroba)</li>
+                                    <li>Nawet jeśli ma hipoglikemię (najpierw leczysz hipo, potem insulina)</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
                                 <strong>2. Mierz Glukozę Regularnie</strong>
-                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                <ul style="margin-top: 8px;">
                                     <li>Przed posiłkami (jeśli możesz)</li>
                                     <li>2 godziny po posiłkach</li>
                                     <li>Przed snem</li>
                                     <li>W nocy (szczególnie jeśli ma hipoglikemię)</li>
                                 </ul>
+                            </div>
 
+                            <div class="decision-box">
                                 <strong>3. Obserwuj Zmiany Zapatrywania</strong>
-                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
-                                    <li>Mały maluch rozwija się szybko</li>
-                                    <li>Zapotrzebowanie na insulinę rośnie</li>
-                                    <li>Co miesiąc może wymagać zmian</li>
-                                    <li>Regularnie konsultuj z diabetologiem</li>
+                                <ul style="margin-top: 8px;">
+                                    <li>Aleksander rozwija się szybko</li>
+                                    <li>Zapotrzebowanie na insulinę rośnie KAŻDY MIESIĄC</li>
+                                    <li>Regularne konsultacje z lekarzem (co 3-6 miesięcy minimum)</li>
                                 </ul>
+                            </div>
 
+                            <div class="decision-box">
                                 <strong>4. Dieta = Obliczanie Węglowodanów</strong>
-                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
-                                    <li>Nie ma zakazanych produktów</li>
-                                    <li>Wszystko można, trzeba tylko obliczyć</li>
-                                    <li>Używaj aplikacji (KalkulatorWW) do liczenia</li>
+                                <ul style="margin-top: 8px;">
+                                    <li>Nie ma zakazanych produktów!</li>
+                                    <li>Wszystko można, trzeba tylko obliczyć WW</li>
+                                    <li>Używaj tej aplikacji do liczenia</li>
                                 </ul>
+                            </div>
 
+                            <div class="decision-box">
                                 <strong>5. Edukacja Rodziny</strong>
-                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
-                                    <li>Babcia, dziadek, opiekunowie - muszą wiedzieć</li>
-                                    <li>Sytuacje awaryjne mogą zajść wszędzie</li>
-                                    <li>Wszyscy powinni wiedzieć: gdzie insulina, jak mierzyć glukozę, co robić przy hipoglikemii</li>
+                                <ul style="margin-top: 8px;">
+                                    <li>Babcia, dziadek, opiekunowie MUSZĄ wiedzieć</li>
+                                    <li>Kryzysy mogą się zdarzyć wszędzie</li>
+                                    <li>Wszyscy powinni wiedzieć: gdzie insulina, jak mierzyć glukozę, co robić przy hipo</li>
                                 </ul>
+                            </div>
 
-                                <strong>6. Psychika Dziecka</strong>
-                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
-                                    <li>Cukrzyca to nie kara</li>
+                            <div class="decision-box">
+                                <strong>6. Psychika Aleksandra</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Cukrzyca to NIE kara</li>
                                     <li>Aleksander jest normalnym dzieckiem</li>
-                                    <li>Może jeść, bawiła się, biegać jak inne dzieci</li>
+                                    <li>Może jeść, bawić się, biegać jak inne dzieci</li>
                                     <li>Twoja spokojność = jego spokojność</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- OBLICZANIE PARAMETRÓW -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">🧮</span>Obliczanie Parametrów</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body">
+                <!-- 14. OBLICZANIE PARAMETRÓW -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>🧮 Obliczanie ICR i ISF</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <div class="decision-box">
                                 <strong>ICR (Insulin-to-Carb Ratio / Carb Ratio):</strong>
-                                <div style="background: #f8f9fb; padding: 8px; border-radius: 4px; margin: 4px 0; font-size: 12px;">
-                                    <strong>Formuła:</strong> 500 ÷ Dobowe Zapotrzebowanie Insuliny (DDI)<br/>
-                                    <strong>Przykład:</strong> Jeśli Aleksander zażywa 20 j.i./dzień<br/>
-                                    500 ÷ 20 = 25 → 1 j.i. pokrywa 25g węglowodanów
-                                </div>
+                                <ul style="margin-top: 8px;">
+                                    <li><strong>Formuła: 500 ÷ Dobowe Zapotrzebowanie Insuliny (DDI)</strong></li>
+                                    <li>Przykład: Aleksander zażywa 20 j.i./dobę</li>
+                                    <li>500 ÷ 20 = 25 → 1 j.i. pokrywa 25g węglowodanów</li>
+                                    <li>Punkt startowy - dostosuj na podstawie obserwacji!</li>
+                                </ul>
+                            </div>
 
-                                <strong style="display: block; margin-top: 8px;">ISF (Insulin Sensitivity Factor):</strong>
-                                <div style="background: #f8f9fb; padding: 8px; border-radius: 4px; margin: 4px 0; font-size: 12px;">
-                                    <strong>Formuła:</strong> 1800 ÷ Dobowe Zapotrzebowanie Insuliny (DDI)<br/>
-                                    <strong>Przykład:</strong> Jeśli Aleksander zażywa 20 j.i./dzień<br/>
-                                    1800 ÷ 20 = 90 → 1 j.i. zniża glukozę o 90 mg/dl
-                                </div>
+                            <div class="decision-box">
+                                <strong>ISF (Insulin Sensitivity Factor):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li><strong>Formuła: 1800 ÷ Dobowe Zapotrzebowanie Insuliny (DDI)</strong></li>
+                                    <li>Przykład: Aleksander zażywa 20 j.i./dobę</li>
+                                    <li>1800 ÷ 20 = 90 → 1 j.i. zniża glukozę o 90 mg/dl</li>
+                                    <li>Punkt startowy - dostosuj na podstawie obserwacji!</li>
+                                </ul>
+                            </div>
 
-                                <strong style="display: block; margin-top: 8px;">DDI (Dobowe Zapotrzebowanie Insuliny):</strong>
-                                <div style="background: #f8f9fb; padding: 8px; border-radius: 4px; margin: 4px 0; font-size: 12px;">
-                                    <strong>Dla niemowląt poniżej roku:</strong> 0.5-1.0 j.i./kg masy ciała<br/>
-                                    <strong>Przykład:</strong> Aleksander waży 10 kg<br/>
-                                    10 kg × 0.7 = 7 j.i./dzień (średnio)<br/>
-                                    <strong>⚠️ To wyłącznie szacunkowa wartość!</strong> Zawsze słuchaj lekarza.
-                                </div>
+                            <div class="decision-box">
+                                <strong>DDI (Dobowe Zapotrzebowanie Insuliny):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li><strong>Dla niemowląt poniżej roku: 0.5-1.0 j.i./kg masy ciała</strong></li>
+                                    <li>Przykład: Aleksander waży 10 kg</li>
+                                    <li>10 kg × 0.7 = 7 j.i./dobę (średnio)</li>
+                                    <li>⚠️ To wyłącznie szacunkowa wartość! Zawsze słuchaj lekarza!</li>
+                                </ul>
+                            </div>
 
-                                <div class="warning" style="margin-top: 12px;">
-                                    ⚠️ Wszystkie parametry są INDYWIDUALNE dla Aleksandra. Zawsze konsultuj zmianę z diabetologiem!
-                                </div>
+                            <div class="warning-box">
+                                ⚠️ <strong>WSZYSTKIE parametry są INDYWIDUALNE!</strong> Zawsze konsultuj zmianę z diabetologiem Aleksandra!
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Kiedy zmniejszyć ICR (więcej insuliny):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Glikemia zwykle wysoka po posiłkach</li>
+                                    <li>Aleksander rośnie szybko</li>
+                                    <li>Pubertacja (nie dotyczy niemowląt!)</li>
+                                    <li>Infekcja/choroba (tymczasowo)</li>
+                                </ul>
+                            </div>
+
+                            <div class="decision-box">
+                                <strong>Kiedy zwiększyć ICR (mniej insuliny):</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Glikemia zwykle niska po posiłkach</li>
+                                    <li>Dużo hipoglikemii</li>
+                                    <li>Zwiększona aktywność fizyczna</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- ABOUT -->
-                    <div class="guide-category">
-                        <div class="category-header">
-                            <span><span class="category-icon">ℹ️</span>O Poradniku</span>
-                            <span class="category-arrow">▼</span>
-                        </div>
-                        <div class="category-content">
-                            <div class="content-body" style="font-size: 12px;">
-                                <p>Poradnik ten został stworzony na bazie rzeczywistej wiedzy medycznej i wytycznych międzynarodowych dla zarządzania cukrzycą typu 1 u dzieci poniżej roku życia.</p>
+                <!-- 15. O TYM PORADNIKU -->
+                <div class="guide-section">
+                    <div class="guide-header">
+                        <span>ℹ️ O Poradniku</span>
+                        <span class="guide-arrow">▼</span>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-body">
+                            <p style="font-size: 12px; line-height: 1.7; margin-bottom: 12px;">
+                                <strong>Poradnik ten został stworzony na bazie rzeczywistej wiedzy medycznej i wytycznych międzynarodowych dla zarządzania cukrzycą typu 1 u dzieci poniżej roku życia.</strong>
+                            </p>
 
-                                <p style="margin-top: 8px;"><strong>⚠️ WAŻNE:</strong> Ten poradnik wspomaga Twoje decyzje, ale NIGDY nie zastępuje porad lekarza. Zawsze konsultuj wszystkie wątpliwości z zespołem diabetologicznym Aleksandra.</p>
-
-                                <p style="margin-top: 8px;"><strong>Wersja:</strong> 2.0 (V2 + Poradnik) | <strong>Data:</strong> Listopad 2025</p>
-
-                                <p style="margin-top: 8px;"><strong>Dedykacja:</strong> Dla Aleksandra i jego rodziny. Życzę Wam siły, cierpliwości i wielu szczęśliwych dni razem.</p>
+                            <div class="danger-box">
+                                <strong>⚠️ WAŻNE ZASTRZEŻENIE:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>Poradnik wspomaga Twoje decyzje</li>
+                                    <li>NIGDY nie zastępuje porad lekarza</li>
+                                    <li>ZAWSZE konsultuj wątpliwości z zespołem diabetologicznym Aleksandra</li>
+                                    <li>Całkowita odpowiedzialność za decyzje zdrowotne spada na Ciebie i lekarzy</li>
+                                </ul>
                             </div>
+
+                            <p style="font-size: 12px; margin-top: 16px; line-height: 1.7;">
+                                <strong>Wersja:</strong> 2.2 (Index + Poradnik Rozszerzony)<br/>
+                                <strong>Data:</strong> Listopad 2025<br/>
+                                <strong>Dla:</strong> Aleksandra i jego rodziny<br/><br/>
+                                Życzę siły, cierpliwości i wielu szczęśliwych dni razem! 💪❤️
+                            </p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal - Dodaj Posiłek -->
-    <div class="modal" id="add-meal-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>Dodaj Posiłek</span>
-                <button class="close-btn" onclick="closeAddMealModal()">✕</button>
-            </div>
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="form-label">Wybierz produkt <span class="required">*</span></label>
-                    <select id="meal-product-select" class="form-input" onchange="updateProductDetails()"></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ilość <span class="required">*</span></label>
-                    <div class="input-wrapper">
-                        <button class="qty-btn" onclick="decrementQty()">−</button>
-                        <input type="number" id="meal-quantity" class="form-input" placeholder="0" inputmode="numeric" step="1" value="100" style="text-align: center;">
-                        <button class="qty-btn" onclick="incrementQty()">+</button>
-                    </div>
-                    <div id="meal-quantity-unit" style="font-size: 12px; color: #999; margin-top: 4px;">100 g</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Węglowodany (wyliczone)</label>
-                    <div style="font-size: 16px; font-weight: 700; color: #667eea; padding: 10px; background: #f0f2ff; border-radius: 8px;" id="meal-carbs-preview">0 g</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Notatki</label>
-                    <textarea class="form-input" id="meal-notes" placeholder="Np. bez cukru, ze słodzikiem..."></textarea>
-                </div>
-                <div class="form-actions">
-                    <button class="btn-primary" onclick="saveMeal()">Dodaj do Kalkulatora</button>
-                    <button class="btn-secondary" onclick="closeAddMealModal()">Anuluj</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal - Dodaj Produkt -->
-    <div class="modal" id="add-product-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>Dodaj Produkt</span>
-                <button class="close-btn" onclick="closeAddProductModal()">✕</button>
-            </div>
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="form-label">Nazwa produktu <span class="required">*</span></label>
-                    <input type="text" id="product-name" class="form-input" placeholder="Np. Chleb pszenny">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kod EAN</label>
-                    <input type="text" id="product-ean" class="form-input" placeholder="8719400000000">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Jednostka miary <span class="required">*</span></label>
-                    <select id="product-unit" class="form-input">
-                        <option value="g">gramy (g)</option>
-                        <option value="ml">mililitry (ml)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Węglowodany na 100 jednostek <span class="required">*</span></label>
-                    <input type="number" id="product-carbs" class="form-input" placeholder="15.5" inputmode="decimal" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Białko (g/100j)</label>
-                    <input type="number" id="product-protein" class="form-input" placeholder="5.0" inputmode="decimal" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tłuszcz (g/100j)</label>
-                    <input type="number" id="product-fat" class="form-input" placeholder="2.0" inputmode="decimal" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Energia (kcal/100j)</label>
-                    <input type="number" id="product-calories" class="form-input" placeholder="80" inputmode="numeric" step="1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kategoria <span class="required">*</span></label>
-                    <select id="product-category" class="form-input"></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Notatki</label>
-                    <textarea class="form-input" id="product-notes" placeholder="Dodatkowe informacje..."></textarea>
-                </div>
-                <div class="form-actions">
-                    <button class="btn-primary" onclick="saveProduct()">Zapisz Produkt</button>
-                    <button class="btn-secondary" onclick="closeAddProductModal()">Anuluj</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
     <script>
-        const DEFAULT_CATEGORIES = ['Owoce', 'Warzywa', 'Zboża i Chleb', 'Nabiał', 'Mięso i Drób', 'Ryby i Owoce Morza', 'Leguminy', 'Tłuszcze i Oleje', 'Przyprawy', 'Napoje', 'Desery', 'Inne'];
-        const DEFAULT_PRODUCTS = [
-            {id: 1, name: 'Chleb pszenny', ean: '', unit: 'g', carbs: 49, protein: 7, fat: 1.4, calories: 265, category: 'Zboża i Chleb', notes: 'Standardowy chleb', timestamp: Date.now()},
-            {id: 2, name: 'Banany', ean: '', unit: 'g', carbs: 23.5, protein: 1.1, fat: 0.3, calories: 98, category: 'Owoce', notes: 'Świeże banany', timestamp: Date.now()},
-            {id: 3, name: 'Mleko zwykłe 3.2%', ean: '', unit: 'ml', carbs: 4.8, protein: 3.2, fat: 3.2, calories: 61, category: 'Nabiał', notes: 'Mleko krowie', timestamp: Date.now()},
-            {id: 4, name: 'Ryż biały gotowany', ean: '', unit: 'g', carbs: 28, protein: 2.7, fat: 0.3, calories: 130, category: 'Zboża i Chleb', notes: 'Ugotowany', timestamp: Date.now()},
-            {id: 5, name: 'Jabłka', ean: '', unit: 'g', carbs: 13.8, protein: 0.3, fat: 0.2, calories: 56, category: 'Owoce', notes: 'Świeże jabłka', timestamp: Date.now()},
-            {id: 6, name: 'Kurczak pieczony', ean: '', unit: 'g', carbs: 0, protein: 31, fat: 3.6, calories: 165, category: 'Mięso i Drób', notes: 'Mięso piersiowe', timestamp: Date.now()},
-            {id: 7, name: 'Pomidory', ean: '', unit: 'g', carbs: 3.9, protein: 0.9, fat: 0.2, calories: 18, category: 'Warzywa', notes: 'Świeże pomidory', timestamp: Date.now()},
-            {id: 8, name: 'Oranżada', ean: '', unit: 'ml', carbs: 11, protein: 0.3, fat: 0, calories: 45, category: 'Napoje', notes: 'Naturalna oranżada', timestamp: Date.now()},
-            {id: 9, name: 'Cukierki (średnie)', ean: '', unit: 'g', carbs: 80, protein: 0, fat: 2, calories: 320, category: 'Desery', notes: 'Cukierki zwykłe', timestamp: Date.now()},
-            {id: 10, name: 'Ciecierzyca gotowana', ean: '', unit: 'g', carbs: 27, protein: 19, fat: 2.4, calories: 164, category: 'Leguminy', notes: 'Ugotowana', timestamp: Date.now()}
-        ];
-
-        let meals = [];
-        let currentEditProductId = null;
-        let currentMealQuantity = 100;
-        let html5QrcodeScanner = null;
-
-        function loadData() {
-            window.categories = JSON.parse(localStorage.getItem('categories') || JSON.stringify(DEFAULT_CATEGORIES));
-            window.products = JSON.parse(localStorage.getItem('products') || JSON.stringify(DEFAULT_PRODUCTS));
-            meals = JSON.parse(localStorage.getItem('meals') || '[]');
-            window.cameraPrefs = JSON.parse(localStorage.getItem('cameraPrefs') || '{}');
-            window.products = window.products.map((p, i) => ({ ...p, id: p.id || i + 1 }));
-            updateCategorySelects();
-            renderMeals();
-            renderProducts();
-        }
-
-        function saveData() {
-            localStorage.setItem('categories', JSON.stringify(window.categories));
-            localStorage.setItem('products', JSON.stringify(window.products));
-            localStorage.setItem('meals', JSON.stringify(meals));
-            localStorage.setItem('cameraPrefs', JSON.stringify(window.cameraPrefs));
-        }
-
-        // TAB SWITCHING
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const tabName = e.target.dataset.tab;
-                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                e.target.classList.add('active');
-                document.getElementById(tabName).classList.add('active');
-                if (tabName === 'guide') {
-                    document.querySelectorAll('.category-header').forEach(h => {
-                        h.addEventListener('click', function() {
-                            this.closest('.guide-category').classList.toggle('expanded');
-                        });
-                    });
-                }
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
             });
         });
 
-        // MEALS
-        function renderMeals() {
-            const container = document.getElementById('meals-list');
-            if (meals.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🍽️</div><div class="empty-state-text">Brak posiłków. Dodaj swój pierwszy posiłek!</div></div>';
-            } else {
-                container.innerHTML = meals.map((m, i) => `
-                    <div class="meal-item">
-                        <div class="meal-info">
-                            <div class="meal-name">${m.product.name}</div>
-                            <div class="meal-details">${m.quantity} ${m.product.unit}${m.notes ? ' • ' + m.notes : ''}</div>
-                        </div>
-                        <div class="meal-carbs">${m.carbs.toFixed(1)}g</div>
-                        <button class="remove-btn" onclick="removeMeal(${i})">Usuń</button>
-                    </div>
-                `).join('');
-            }
-            updateSummary();
-        }
-
-        function updateSummary() {
-            const totalCarbs = meals.reduce((s, m) => s + m.carbs, 0);
-            const totalCal = meals.reduce((s, m) => s + m.calories, 0);
-            document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1) + ' g';
-            document.getElementById('total-calories').textContent = Math.round(totalCal) + ' kcal';
-        }
-
-        function openAddMealModal() {
-            if (!window.products.length) {
-                showAlert('Brak produktów w bazie!', 'error');
-                return;
-            }
-            const sel = document.getElementById('meal-product-select');
-            sel.innerHTML = window.products.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            document.getElementById('meal-quantity').value = 100;
-            document.getElementById('meal-notes').value = '';
-            currentMealQuantity = 100;
-            updateProductDetails();
-            document.getElementById('add-meal-modal').classList.add('active');
-        }
-
-        function closeAddMealModal() {
-            document.getElementById('add-meal-modal').classList.remove('active');
-        }
-
-        function updateProductDetails() {
-            const id = parseInt(document.getElementById('meal-product-select').value);
-            const p = window.products.find(x => x.id === id);
-            if (!p) return;
-            currentMealQuantity = parseInt(document.getElementById('meal-quantity').value) || 100;
-            const carbs = (currentMealQuantity / 100) * p.carbs;
-            document.getElementById('meal-quantity-unit').textContent = `${currentMealQuantity} ${p.unit}`;
-            document.getElementById('meal-carbs-preview').textContent = `${carbs.toFixed(1)} g`;
-        }
-
-        function incrementQty() {
-            let qty = parseInt(document.getElementById('meal-quantity').value) || 0;
-            qty += 10;
-            document.getElementById('meal-quantity').value = qty;
-            updateProductDetails();
-        }
-
-        function decrementQty() {
-            let qty = parseInt(document.getElementById('meal-quantity').value) || 0;
-            qty = Math.max(1, qty - 10);
-            document.getElementById('meal-quantity').value = qty;
-            updateProductDetails();
-        }
-
-        function saveMeal() {
-            const id = parseInt(document.getElementById('meal-product-select').value);
-            const p = window.products.find(x => x.id === id);
-            const qty = parseInt(document.getElementById('meal-quantity').value);
-            const notes = document.getElementById('meal-notes').value;
-            if (!p || !qty) {
-                showAlert('Uzupełnij wymagane pola!', 'error');
-                return;
-            }
-            const carbs = (qty / 100) * p.carbs;
-            const calories = (qty / 100) * (p.calories || 0);
-            meals.push({product: p, quantity: qty, carbs, calories, notes, timestamp: Date.now()});
-            saveData();
-            renderMeals();
-            closeAddMealModal();
-            showAlert('Posiłek dodany!', 'success');
-        }
-
-        function removeMeal(idx) {
-            meals.splice(idx, 1);
-            saveData();
-            renderMeals();
-            showAlert('Posiłek usunięty', 'success');
-        }
-
-        function calculateBolus() {
-            const carbs = meals.reduce((s, m) => s + m.carbs, 0);
-            const ratio = parseFloat(document.getElementById('carb-ratio').value) || 12;
-            const gluc = parseFloat(document.getElementById('current-glucose').value) || 100;
-            const target = parseFloat(document.getElementById('target-glucose').value) || 120;
-            const isf = parseFloat(document.getElementById('isf').value) || 50;
-            if (!ratio || !isf) {
-                showAlert('Uzupełnij wymagane pola kalkulatora!', 'error');
-                return;
-            }
-            const bolus = Math.max(0, (carbs / ratio) + (gluc - target) / isf);
-            document.getElementById('bolus-result').style.display = 'block';
-            document.getElementById('bolus-value').textContent = bolus.toFixed(1);
-        }
-
-        // PRODUCTS
-        function renderProducts() {
-            const container = document.getElementById('products-list');
-            const search = document.getElementById('search-products').value.toLowerCase();
-            const cat = document.getElementById('category-filter').value;
-            const sort = document.getElementById('sort-products').value;
-            let list = window.products.filter(p => p.name.toLowerCase().includes(search) && (!cat || p.category === cat));
-            if (sort === 'date-desc') list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            if (sort === 'date-asc') list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-            if (sort === 'name-asc') list.sort((a, b) => a.name.localeCompare(b.name));
-            if (sort === 'name-desc') list.sort((a, b) => b.name.localeCompare(a.name));
-            if (list.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><div class="empty-state-text">Brak produktów spełniających kryteria.</div></div>';
-            } else {
-                container.innerHTML = list.map(p => `
-                    <div class="product-card">
-                        <div class="product-details">
-                            <div class="product-name">${p.name}</div>
-                            <div class="product-info">${p.category} • ${p.unit} • ${p.carbs}g WW/100</div>
-                        </div>
-                        <div class="product-carbs">${p.carbs}g</div>
-                        <div class="product-actions">
-                            <button class="edit-btn" onclick="editProduct(${p.id})">✏️</button>
-                            <button class="delete-btn" onclick="deleteProduct(${p.id})">🗑️</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function filterProducts() { renderProducts(); }
-        function sortProducts() { renderProducts(); }
-
-        function updateCategorySelects() {
-            ['product-category', 'scanned-category'].forEach(id => {
-                const sel = document.getElementById(id);
-                if (sel) sel.innerHTML = window.categories.map(c => `<option value="${c}">${c}</option>`).join('');
-            });
-            document.getElementById('category-filter').innerHTML = '<option value="">Wszystkie kategorie</option>' + window.categories.map(c => `<option value="${c}">${c}</option>`).join('');
-        }
-
-        function openAddProductModal() {
-            currentEditProductId = null;
-            document.getElementById('product-name').value = '';
-            document.getElementById('product-ean').value = '';
-            document.getElementById('product-unit').value = 'g';
-            document.getElementById('product-carbs').value = '';
-            document.getElementById('product-protein').value = '';
-            document.getElementById('product-fat').value = '';
-            document.getElementById('product-calories').value = '';
-            document.getElementById('product-notes').value = '';
-            document.querySelector('#add-product-modal .modal-header span').textContent = 'Dodaj Produkt';
-            document.getElementById('add-product-modal').classList.add('active');
-        }
-
-        function closeAddProductModal() {
-            document.getElementById('add-product-modal').classList.remove('active');
-        }
-
-        function saveProduct() {
-            const name = document.getElementById('product-name').value.trim();
-            const ean = document.getElementById('product-ean').value.trim();
-            const unit = document.getElementById('product-unit').value;
-            const carbs = parseFloat(document.getElementById('product-carbs').value);
-            const protein = parseFloat(document.getElementById('product-protein').value) || 0;
-            const fat = parseFloat(document.getElementById('product-fat').value) || 0;
-            const calories = parseFloat(document.getElementById('product-calories').value) || 0;
-            const cat = document.getElementById('product-category').value;
-            const notes = document.getElementById('product-notes').value.trim();
-            if (!name || !unit || isNaN(carbs) || !cat) {
-                showAlert('Uzupełnij wszystkie wymagane pola!', 'error');
-                return;
-            }
-            if (currentEditProductId) {
-                const idx = window.products.findIndex(p => p.id === currentEditProductId);
-                window.products[idx] = {...window.products[idx], name, ean, unit, carbs, protein, fat, calories, category: cat, notes, timestamp: Date.now()};
-            } else {
-                window.products.push({id: Date.now(), name, ean, unit, carbs, protein, fat, calories, category: cat, notes, timestamp: Date.now()});
-            }
-            saveData();
-            renderProducts();
-            closeAddProductModal();
-            showAlert('Produkt zapisany!', 'success');
-        }
-
-        function editProduct(id) {
-            const p = window.products.find(x => x.id === id);
-            if (!p) return;
-            currentEditProductId = id;
-            document.getElementById('product-name').value = p.name;
-            document.getElementById('product-ean').value = p.ean || '';
-            document.getElementById('product-unit').value = p.unit;
-            document.getElementById('product-carbs').value = p.carbs;
-            document.getElementById('product-protein').value = p.protein || '';
-            document.getElementById('product-fat').value = p.fat || '';
-            document.getElementById('product-calories').value = p.calories || '';
-            document.getElementById('product-category').value = p.category;
-            document.getElementById('product-notes').value = p.notes || '';
-            document.querySelector('#add-product-modal .modal-header span').textContent = 'Edytuj Produkt';
-            document.getElementById('add-product-modal').classList.add('active');
-        }
-
-        function deleteProduct(id) {
-            if (confirm('Na pewno chcesz usunąć?')) {
-                window.products = window.products.filter(p => p.id !== id);
-                saveData();
-                renderProducts();
-                showAlert('Produkt usunięty!', 'success');
-            }
-        }
-
-        // SCANNER
-        function startScanner() {
-            if (html5QrcodeScanner) return;
-            document.getElementById('qr-reader').innerHTML = '';
-            document.querySelector('.start-scanner').style.display = 'none';
-            document.getElementById('stop-scanner-btn').style.display = 'block';
-            html5QrcodeScanner = new Html5QrcodeScanner('qr-reader', {fps: 15, qrbox: {width: 250, height: 250}, facingMode: 'environment'}, false);
-            html5QrcodeScanner.render(onScanSuccess, () => {});
-            window.cameraPrefs.permissionGranted = true;
-            saveData();
-        }
-
-        function stopScanner() {
-            if (html5QrcodeScanner) {
-                html5QrcodeScanner.clear();
-                html5QrcodeScanner = null;
-            }
-            document.querySelector('.start-scanner').style.display = 'block';
-            document.getElementById('stop-scanner-btn').style.display = 'none';
-        }
-
-        function onScanSuccess(code) {
-            stopScanner();
-            document.getElementById('scanned-code').value = code;
-            document.getElementById('scanner-result').classList.add('active');
-        }
-
-        function closeScannedProduct() {
-            document.getElementById('scanner-result').classList.remove('active');
-            document.getElementById('scanned-code').value = '';
-            document.getElementById('scanned-name').value = '';
-            document.getElementById('scanned-carbs').value = '';
-            document.getElementById('scanned-notes').value = '';
-        }
-
-        function saveScannedProduct() {
-            const code = document.getElementById('scanned-code').value.trim();
-            const name = document.getElementById('scanned-name').value.trim();
-            const carbs = parseFloat(document.getElementById('scanned-carbs').value);
-            const cat = document.getElementById('scanned-category').value;
-            const notes = document.getElementById('scanned-notes').value.trim();
-            if (!name || isNaN(carbs) || !cat) {
-                showAlert('Uzupełnij wymagane pola!', 'error');
-                return;
-            }
-            window.products.push({id: Date.now(), name, ean: code, unit: 'g', carbs, protein: 0, fat: 0, calories: 0, category: cat, notes, timestamp: Date.now()});
-            saveData();
-            closeScannedProduct();
-            renderProducts();
-            showAlert('Produkt z skanowania zapisany!', 'success');
-        }
-
-        function showAlert(msg, type) {
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = msg;
-            document.querySelector('.content-area').insertBefore(alert, document.querySelector('.tab-content.active').firstChild);
-            setTimeout(() => alert.remove(), 3000);
-        }
-
-        loadData();
-
-        // Initialize guide category toggles
-        document.querySelectorAll('.category-header').forEach(h => {
-            h.addEventListener('click', function() {
-                this.closest('.guide-category').classList.toggle('expanded');
+        // Guide section toggling
+        document.querySelectorAll('.guide-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const section = header.closest('.guide-section');
+                section.classList.toggle('expanded');
             });
         });
+
+        // Load external JavaScript
+        const script = document.createElement('script');
+        script.src = 'app.js';
+        document.head.appendChild(script);
     </script>
 </body>
 </html>

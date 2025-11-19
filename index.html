@@ -785,6 +785,7 @@
             <button class="tab-button active" data-tab="calculator">Kalkulator</button>
             <button class="tab-button" data-tab="products">Produkty</button>
             <button class="tab-button" data-tab="scanner">Skaner</button>
+             <button class="tab-button" data-tab="guide">📖 Poradnik</button>
         </div>
 
         <!-- Content -->
@@ -1039,6 +1040,419 @@
                     <button class="btn-secondary" onclick="closeAddProductModal()">Anuluj</button>
                 </div>
             </div>
+
+
+<!-- PORADNIK -->
+            <div class="tab-content" id="guide">
+                <div class="guide-section">
+                    <!-- EMERGENCY CONTACTS -->
+                    <div class="guide-category expanded">
+                        <div class="category-header">
+                            <span><span class="category-icon">📞</span>Kontakt Z Zespołem Medycznym</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <div class="contact-box">
+                                    <strong>🚨 POGOTOWIE RATUNKOWE</strong>
+                                    <strong style="color: red;">999</strong>
+                                    <small>Wywołaj natychmiast jeśli:</small>
+                                    <ul style="margin-top: 4px; margin-left: 14px;">
+                                        <li>Aleksander jest nieprzytomny</li>
+                                        <li>Drgawki lub zaburzenia świadomości</li>
+                                        <li>Ciężki oddech (Kussmaula)</li>
+                                        <li>Zapach acetonu z ust</li>
+                                        <li>Nasilone wymioty</li>
+                                    </ul>
+                                </div>
+
+                                <div class="contact-box">
+                                    <strong>👨‍⚕️ Lekarz Diabetolog (dzisiaj)</strong>
+                                    <small>Nr telefonicny: _____________</small>
+                                </div>
+
+                                <div class="contact-box">
+                                    <strong>🏥 Poradnia Diabetologiczna</strong>
+                                    <small>Nr telefonicny: _____________</small>
+                                </div>
+
+                                <div class="contact-box">
+                                    <strong>🔧 Serwis Pompy Insulinowej</strong>
+                                    <small>Nr telefonicny: _____________</small>
+                                </div>
+
+                                <div class="warning">
+                                    ⚠️ <strong>Zawsze miej pod ręką zapisane wszystkie numery!</strong> Nie polegaj tylko na telefonie - mogą się rozładować baterie lub brak sieci.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHEAT SHEET -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">⚡</span>Szybka Ściąga</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <strong style="color: #667eea;">Poziomy Glukozy (mg/dl):</strong>
+                                <div class="cheatsheet">
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">&lt;55</span>
+                                        <span class="cheatsheet-value">🔴 HIPOGLIKEMIA - Ratuj!</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">55-70</span>
+                                        <span class="cheatsheet-value">🟠 Niżka - Obserwuj</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">70-150</span>
+                                        <span class="cheatsheet-value">🟢 NORMA</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">150-200</span>
+                                        <span class="cheatsheet-value">🟡 Wysoka</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">&gt;250</span>
+                                        <span class="cheatsheet-value">🔴 Bardzo wysoka</span>
+                                    </div>
+                                </div>
+
+                                <strong style="color: #667eea; margin-top: 12px; display: block;">Obliczenia Bolusa:</strong>
+                                <div class="cheatsheet">
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">ICR (Carb Ratio)</span>
+                                        <span class="cheatsheet-value">1 j.i. : ?? g WW</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">ISF</span>
+                                        <span class="cheatsheet-value">1 j.i. zniża o ?? mg/dl</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">Cel glukozy</span>
+                                        <span class="cheatsheet-value">?? mg/dl</span>
+                                    </div>
+                                </div>
+
+                                <strong style="color: #667eea; margin-top: 12px; display: block;">Przy Hipoglikemii (&lt;70):</strong>
+                                <div class="cheatsheet">
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">Szybkie WW</span>
+                                        <span class="cheatsheet-value">4-5g (sok, cukier)</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">Czekaj</span>
+                                        <span class="cheatsheet-value">15 minut</span>
+                                    </div>
+                                    <div class="cheatsheet-row">
+                                        <span class="cheatsheet-key">Zmierz ponownie</span>
+                                        <span class="cheatsheet-value">Glukometr</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NISKA GLUKOZA - POMPA -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">🔴</span>Niska Glukoza (Pompa)</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli Aleksander ma glukozę &lt;70 mg/dl:</div>
+                                    <div class="action">1️⃣ <strong>Zmierz ponownie</strong> - upewnij się (mogą być błędy pomiaru)</div>
+                                    <div class="action">2️⃣ <strong>Podaj szybkie węglowodany:</strong> 4-5g
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Sok 100ml</li>
+                                            <li>Napój z cukrem</li>
+                                            <li>Tabletka glukozy (Dextro)</li>
+                                            <li>Miód (1 łyżeczka)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">3️⃣ <strong>Czekaj 15 minut</strong> - pozwól węglowodanom się zaabsorbować</div>
+                                    <div class="action">4️⃣ <strong>Zmierz ponownie:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Jeśli &gt;100: OK, koniec</li>
+                                            <li>Jeśli &lt;70: Powtórz kroki 2-4</li>
+                                            <li>Jeśli dalej pada: Wezwij 999</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli Aleksander jest NIEPRZYTOMNY:</div>
+                                    <div class="danger">🚨 WEZWIJ 999 NATYCHMIAST!</div>
+                                    <div class="action">• Nie podawaj nic przez usta</div>
+                                    <div class="action">• Podaj glukagon (jeśli posiadasz)</div>
+                                    <div class="action">• Połóż w pozycji bocznej bezpiecznej</div>
+                                    <div class="action">• Sprawdzaj oddech do przybycia pogotowia</div>
+                                </div>
+
+                                <div class="warning">
+                                    ⚠️ <strong>NIGDY nie suspenduuj pompy</strong> w obawie o hipoglikemię. Może to prowadzić do hiperglikemii i kwasicy!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WYSOKA GLUKOZA - POMPA -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">🟡</span>Wysoka Glukoza (Pompa)</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli Aleksander ma glukozę 150-250 mg/dl:</div>
+                                    <div class="action">1️⃣ <strong>Zmierz ketony</strong> - paski ketonowe w moczu lub krwi</div>
+                                    <div class="action">2️⃣ <strong>Jeśli BRAK ketonów:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Podaj korekcyjną insulinę (z pompy lub pena)</li>
+                                            <li>Daj pić dużo wody</li>
+                                            <li>Czekaj 2-3 godziny</li>
+                                            <li>Zmierz ponownie</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">3️⃣ <strong>Jeśli ŚLADY ketonów:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Zwiększ insulinę na 10-20% dawki dobowej</li>
+                                            <li>Podaj z pena (nie z pompy!)</li>
+                                            <li>Daj wodę z cytryną</li>
+                                            <li>Zmierz ketony za 2h</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli Aleksander ma glukozę &gt;250 mg/dl PLUS ketony:</div>
+                                    <div class="danger">🚨 PODEJRZENIE DKA - WEZWIJ 999!</div>
+                                    <div class="action">• Objawy: wymioty, ból brzucha, oddech przyspieszony</div>
+                                    <div class="action">• Zapach acetonu z ust</div>
+                                    <div class="action">• TO STAN ZAGRAŻAJĄCY ŻYCIU</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AWARIA POMPY -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">🔧</span>Awaria Pompy</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli pompa wyświetla ALARM:</div>
+                                    <div class="action">1️⃣ <strong>Przeczytaj kod alarmu</strong> w podręczniku pompy</div>
+                                    <div class="action">2️⃣ <strong>Spróbuj rozwiązać:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Sprawdź baterię</li>
+                                            <li>Sprawdź pojemnik (czy insulina się nie skończyła)</li>
+                                            <li>Sprawdź zestaw infuzyjny (czy nie wycieka)</li>
+                                            <li>Zrestartuj pompę (wg instrukcji)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">3️⃣ <strong>Jeśli to nie pomogło:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Wezwij producenta pompy (masz numer?)</li>
+                                            <li>Przygotuj się na przejście na peny</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli pompa się całkowicie zepsuje:</div>
+                                    <div class="action">1️⃣ <strong>NATYCHMIAST przejdź na peny!</strong></div>
+                                    <div class="action">2️⃣ <strong>Zwiększ insulinę o 20-30%:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Baza (insulina długo działająca) o 20-30%</li>
+                                            <li>Bolus do posiłków o 20-30%</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">3️⃣ <strong>Zmierz glukozę co 2-3 godziny</strong></div>
+                                    <div class="action">4️⃣ <strong>Monitoruj ketony</strong> - ryzyko DKA!</div>
+                                    <div class="action">5️⃣ <strong>Skontaktuj się z diabetologiem</strong> - zmiana schematu</div>
+                                </div>
+
+                                <div class="warning">
+                                    ⚠️ <strong>Zawsze miej w lodówce zapasową fiolkę insuliny bazowej!</strong> Na wypadek awarii pompy.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INFEKCJA/CHOROBA -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">🤒</span>Infekcja / Choroba</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <div class="decision-tree">
+                                    <div class="condition">ℹ️ Jeśli Aleksander zachoruje (gorączka, kaszl, biegunka):</div>
+                                    <div class="action">1️⃣ <strong>ZAWSZE PODAWAJ INSULINĘ!</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>NIGDY nie przerywaj insuliny, nawet jeśli nie je</li>
+                                            <li>Organizm potrzebuje insuliny do walki z infekcją</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">2️⃣ <strong>Zmierz glukozę częściej:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Co 2-4 godziny (zamiast 3-4x dziennie)</li>
+                                            <li>Prowadź dziennik pomiarów</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">3️⃣ <strong>Zwykle glukoza ROŚNIE przy infekcji:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Zwiększ insulinę o 10-50% (zależy od zapatrywania)</li>
+                                            <li>Skonsultuj się z diabetologiem</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">4️⃣ <strong>Dbaj o nawodnienie:</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Dużo napojów (woda, czaj)</li>
+                                            <li>Czasem słabsza herbacie ze cukrem</li>
+                                        </ul>
+                                    </div>
+                                    <div class="action">5️⃣ <strong>Monitoruj ketony (bardzo ważne!):</strong>
+                                        <ul style="margin: 4px 0 0 14px; font-size: 11px;">
+                                            <li>Jeśli ketony pojawiają się, ryzyko DKA</li>
+                                            <li>Bądź gotowy na szpital</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="warning">
+                                    ⚠️ <strong>OSTRZEŻENIE:</strong> Kwasica ketonowa (DKA) BARDZO często pojawia się przy infekcji. Bądź czujny na objawy!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PODSTAWOWE ZASADY -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">📋</span>Podstawowe Zasady</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <strong>1. ZAWSZE Podawaj Insulinę</strong>
+                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                    <li>Brak insuliny = Kwasica ketonowa w ciągu godzin</li>
+                                    <li>Nawet jeśli Aleksander nie je</li>
+                                    <li>Nawet jeśli ma hipoglikemię (najpierw leczysz hipoglikemię, potem insulina)</li>
+                                </ul>
+
+                                <strong>2. Mierz Glukozę Regularnie</strong>
+                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                    <li>Przed posiłkami (jeśli możesz)</li>
+                                    <li>2 godziny po posiłkach</li>
+                                    <li>Przed snem</li>
+                                    <li>W nocy (szczególnie jeśli ma hipoglikemię)</li>
+                                </ul>
+
+                                <strong>3. Obserwuj Zmiany Zapatrywania</strong>
+                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                    <li>Mały maluch rozwija się szybko</li>
+                                    <li>Zapotrzebowanie na insulinę rośnie</li>
+                                    <li>Co miesiąc może wymagać zmian</li>
+                                    <li>Regularnie konsultuj z diabetologiem</li>
+                                </ul>
+
+                                <strong>4. Dieta = Obliczanie Węglowodanów</strong>
+                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                    <li>Nie ma zakazanych produktów</li>
+                                    <li>Wszystko można, trzeba tylko obliczyć</li>
+                                    <li>Używaj aplikacji (KalkulatorWW) do liczenia</li>
+                                </ul>
+
+                                <strong>5. Edukacja Rodziny</strong>
+                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                    <li>Babcia, dziadek, opiekunowie - muszą wiedzieć</li>
+                                    <li>Sytuacje awaryjne mogą zajść wszędzie</li>
+                                    <li>Wszyscy powinni wiedzieć: gdzie insulina, jak mierzyć glukozę, co robić przy hipoglikemii</li>
+                                </ul>
+
+                                <strong>6. Psychika Dziecka</strong>
+                                <ul style="margin: 4px 0 12px 14px; font-size: 12px;">
+                                    <li>Cukrzyca to nie kara</li>
+                                    <li>Aleksander jest normalnym dzieckiem</li>
+                                    <li>Może jeść, bawiła się, biegać jak inne dzieci</li>
+                                    <li>Twoja spokojność = jego spokojność</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OBLICZANIE PARAMETRÓW -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">🧮</span>Obliczanie Parametrów</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body">
+                                <strong>ICR (Insulin-to-Carb Ratio / Carb Ratio):</strong>
+                                <div style="background: #f8f9fb; padding: 8px; border-radius: 4px; margin: 4px 0; font-size: 12px;">
+                                    <strong>Formuła:</strong> 500 ÷ Dobowe Zapotrzebowanie Insuliny (DDI)<br/>
+                                    <strong>Przykład:</strong> Jeśli Aleksander zażywa 20 j.i./dzień<br/>
+                                    500 ÷ 20 = 25 → 1 j.i. pokrywa 25g węglowodanów
+                                </div>
+
+                                <strong style="display: block; margin-top: 8px;">ISF (Insulin Sensitivity Factor):</strong>
+                                <div style="background: #f8f9fb; padding: 8px; border-radius: 4px; margin: 4px 0; font-size: 12px;">
+                                    <strong>Formuła:</strong> 1800 ÷ Dobowe Zapotrzebowanie Insuliny (DDI)<br/>
+                                    <strong>Przykład:</strong> Jeśli Aleksander zażywa 20 j.i./dzień<br/>
+                                    1800 ÷ 20 = 90 → 1 j.i. zniża glukozę o 90 mg/dl
+                                </div>
+
+                                <strong style="display: block; margin-top: 8px;">DDI (Dobowe Zapotrzebowanie Insuliny):</strong>
+                                <div style="background: #f8f9fb; padding: 8px; border-radius: 4px; margin: 4px 0; font-size: 12px;">
+                                    <strong>Dla niemowląt poniżej roku:</strong> 0.5-1.0 j.i./kg masy ciała<br/>
+                                    <strong>Przykład:</strong> Aleksander waży 10 kg<br/>
+                                    10 kg × 0.7 = 7 j.i./dzień (średnio)<br/>
+                                    <strong>⚠️ To wyłącznie szacunkowa wartość!</strong> Zawsze słuchaj lekarza.
+                                </div>
+
+                                <div class="warning" style="margin-top: 12px;">
+                                    ⚠️ Wszystkie parametry są INDYWIDUALNE dla Aleksandra. Zawsze konsultuj zmianę z diabetologiem!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABOUT -->
+                    <div class="guide-category">
+                        <div class="category-header">
+                            <span><span class="category-icon">ℹ️</span>O Poradniku</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="category-content">
+                            <div class="content-body" style="font-size: 12px;">
+                                <p>Poradnik ten został stworzony na bazie rzeczywistej wiedzy medycznej i wytycznych międzynarodowych dla zarządzania cukrzycą typu 1 u dzieci poniżej roku życia.</p>
+
+                                <p style="margin-top: 8px;"><strong>⚠️ WAŻNE:</strong> Ten poradnik wspomaga Twoje decyzje, ale NIGDY nie zastępuje porad lekarza. Zawsze konsultuj wszystkie wątpliwości z zespołem diabetologicznym Aleksandra.</p>
+
+                                <p style="margin-top: 8px;"><strong>Wersja:</strong> 1.0 | <strong>Data:</strong> Listopad 2025</p>
+
+                                <p style="margin-top: 8px;"><strong>Dedykacja:</strong> Dla Aleksandra i jego rodziny. Życzę Wam siły, cierpliwości i wielu szczęśliwych dni razem.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
         </div>
     </div>
 
@@ -1579,6 +1993,12 @@
         renderMeals();
         renderProducts();
         updateCameraInfo();
+//---------------------------------------------------------------------------------------------
+         // Category toggle
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.closest('.guide-category').classList.toggle('expanded');
+//---------------------------------------------------------------------------------------------        
     </script>
 </body>
 </html>

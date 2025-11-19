@@ -785,7 +785,6 @@
             <button class="tab-button active" data-tab="calculator">Kalkulator</button>
             <button class="tab-button" data-tab="products">Produkty</button>
             <button class="tab-button" data-tab="scanner">Skaner</button>
-             <button class="tab-button" data-tab="guide">📖 Poradnik</button>
         </div>
 
         <!-- Content -->
@@ -1039,7 +1038,7 @@
                     <button class="btn-primary" onclick="saveProduct()">Zapisz Produkt</button>
                     <button class="btn-secondary" onclick="closeAddProductModal()">Anuluj</button>
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 
@@ -1580,12 +1579,6 @@
         renderMeals();
         renderProducts();
         updateCameraInfo();
-//---------------------------------------------------------------------------------------------
-         // Category toggle
-        document.querySelectorAll('.category-header').forEach(header => {
-            header.addEventListener('click', function() {
-                this.closest('.guide-category').classList.toggle('expanded');
-//---------------------------------------------------------------------------------------------        
     </script>
 </body>
 </html>
